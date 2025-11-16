@@ -28,8 +28,8 @@ public class EntityManager : MonoBehaviour
 
     [SerializeField][Min(0.1f)] private float speed = 3f;
     [SerializeField] private Transform[] path;
-    [SerializeField] private Vector2 pathMargin = new Vector2(1f, 0.7f);
-    [SerializeField] private int[] pathNum = { 4, 6, 9, 8, 2, 3, 6, 4, 1, 2, 8, 7, 4, 6 };
+    [SerializeField] private Vector2 pathMargin = new Vector2(88f, 68f);
+    [SerializeField] private int[] pathNum = { 1, 4, 2, 3, 4, 1, 3, 2, 1, 4 };
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -98,11 +98,9 @@ public class EntityManager : MonoBehaviour
             StopCoroutine(spawnRoutine);
 
         if (_on)
-        {
-            delay = delayBase;
             spawnRoutine = StartCoroutine(SpawnCoroutine());
-        }
-        else spawnRoutine = null;
+        else
+            spawnRoutine = null;
     }
 
     public IEnumerator SpawnCoroutine()
@@ -114,6 +112,7 @@ public class EntityManager : MonoBehaviour
             monsterPath[i] = path[index];
         }
 
+        Rect r = AutoCamera.WorldRect;
         float timer = delay;
         while (true)
         {
@@ -123,7 +122,7 @@ public class EntityManager : MonoBehaviour
 
             if (timer > delay)
             {
-                Monster monster = Spawn(monsterPath[0].position + Vector3.left * pathMargin.x * 2f);
+                Monster monster = Spawn(new Vector3(r.xMin, r.yMin * pathMargin.y / 100f) + Vector3.left);
 
                 monster.SetHealth(10 + (GameManager.Instance.GetScore() / 100) * 5);
                 monster.SetSpeed(speed);
@@ -162,23 +161,15 @@ public class EntityManager : MonoBehaviour
 
         Rect r = AutoCamera.WorldRect;
 
-        float x1 = r.xMin + pathMargin.x;
-        float x2 = r.center.x;
-        float x3 = r.xMax - pathMargin.x;
+        float left = r.xMin * pathMargin.x / 100f;
+        float right = r.xMax * pathMargin.x / 100f;
+        float bottom = r.yMin * pathMargin.y / 100f;
+        float top = r.yMax * pathMargin.y / 100f;
 
-        float y1 = r.yMax * pathMargin.y;
-        float y2 = r.center.y;
-        float y3 = r.yMin * pathMargin.y;
-
-        path[0].position = new Vector3(x1, y1);
-        path[1].position = new Vector3(x2, y1);
-        path[2].position = new Vector3(x3, y1);
-        path[3].position = new Vector3(x1, y2);
-        path[4].position = new Vector3(x2, y2);
-        path[5].position = new Vector3(x3, y2);
-        path[6].position = new Vector3(x1, y3);
-        path[7].position = new Vector3(x2, y3);
-        path[8].position = new Vector3(x3, y3);
+        path[0].position = new Vector3(left, bottom);
+        path[1].position = new Vector3(right, bottom);
+        path[2].position = new Vector3(left, top);
+        path[3].position = new Vector3(right, top);
     }
     public void ResetEntity() => delay = delayBase;
     #endregion

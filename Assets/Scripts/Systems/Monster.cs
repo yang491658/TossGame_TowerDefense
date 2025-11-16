@@ -40,7 +40,11 @@ public class Monster : Entity
     {
         base.Update();
 
-        if (pathIndex >= path.Length) return;
+        if (pathIndex >= path.Length)
+        {
+            Move(Vector3.right * speed);
+            return;
+        }
 
         Transform targetTrans = path[pathIndex];
         Vector3 target = targetTrans.position;
@@ -49,7 +53,11 @@ public class Monster : Entity
         float arrive = Mathf.Max(speed * Time.deltaTime, 0.1f);
         if (delta.sqrMagnitude < arrive * arrive)
         {
-            if (++pathIndex >= path.Length) return;
+            if (++pathIndex >= path.Length)
+            {
+                Move(Vector3.right * speed);
+                return;
+            }
 
             targetTrans = path[pathIndex];
             target = targetTrans.position;
