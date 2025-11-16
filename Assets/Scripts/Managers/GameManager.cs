@@ -64,6 +64,9 @@ public class GameManager : MonoBehaviour
 
         SoundManager.Instance?.PlayBGM("Default");
 
+        EntityManager.Instance?.SetEntity();
+        EntityManager.Instance?.ToggleSpawn(true);
+
         UIManager.Instance?.ResetPlayTime();
         UIManager.Instance?.OpenUI(false);
     }

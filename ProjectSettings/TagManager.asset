@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Manager
   - Background
+  - Tower
+  - Monster
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -13,9 +16,9 @@ TagManager:
   - Background
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Tower
+  - Monster
+  - Bullet
   - 
   - 
   - 
@@ -45,6 +48,15 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Tower
+    uniqueID: 2778684049
+    locked: 0
+  - name: Monster
+    uniqueID: 1651663735
+    locked: 0
+  - name: Bullet
+    uniqueID: 166598835
     locked: 0
   - name: UI
     uniqueID: 2071170817

@@ -66,6 +66,7 @@ public class AutoCamera : MonoBehaviour
         if (Mathf.Abs(delta - SizeDelta) > 1e-5f)
         {
             SizeDelta = delta;
+            EntityManager.Instance?.SetEntity();
         }
     }
 }
