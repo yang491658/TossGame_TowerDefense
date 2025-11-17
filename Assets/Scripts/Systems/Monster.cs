@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Monster : Entity
 {
-    private Canvas canvas;
     private static int sorting = 0;
 
     [Header("Health")]
@@ -21,7 +20,7 @@ public class Monster : Entity
     {
         base.Awake();
 
-        canvas = GetComponentInChildren<Canvas>();
+        Canvas canvas = GetComponentInChildren<Canvas>();
         healthText = GetComponentInChildren<TextMeshProUGUI>();
 
         sr.sortingOrder = sorting;
