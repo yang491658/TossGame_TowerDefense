@@ -28,5 +28,6 @@ public class Entity : MonoBehaviour
 
     #region GET
     public SpriteRenderer GetSR() => sr;
+    public Collider2D GetCol() => col;
     #endregion
 }
