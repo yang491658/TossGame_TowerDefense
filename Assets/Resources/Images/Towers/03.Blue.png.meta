@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0cfa82ae8de0420498fb1fce7d25adb7
+guid: e3e07586e50f0944b84fd73cddb3cb94
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7316229441688303391
-    second: Tower_0
+      213: 6098423327823721223
+    second: 03.Blue_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -152,7 +152,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tower_0
+      name: 03.Blue_0
       rect:
         serializedVersion: 2
         x: 0
@@ -167,8 +167,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f17f5170ae7788560800000000000000
-      internalID: 7316229441688303391
+      spriteID: 70373e0b4b3f1a450800000000000000
+      internalID: 6098423327823721223
       vertices: []
       indices: 
       edges: []
@@ -187,7 +187,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Tower_0: 7316229441688303391
+      03.Blue_0: 6098423327823721223
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

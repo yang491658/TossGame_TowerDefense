@@ -1,16 +1,55 @@
+using System.Text.RegularExpressions;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [CreateAssetMenu(fileName = "Tower", menuName = "TowerData", order = 1)]
 public class TowerData : ScriptableObject
 {
-    [Header("Entity")]
+    [Header("Default")]
     public int ID;
     public string Name;
+    public Sprite Image;
     public Color32 Color;
 
 #if UNITY_EDITOR
-    protected virtual void OnValidate()
+    private void OnValidate()
     {
+        var sprites = Resources.LoadAll<Sprite>("Images/Towers");
+        var used = new System.Collections.Generic.HashSet<string>();
+        foreach (var g in AssetDatabase.FindAssets("t:TowerData"))
+        {
+            var d = AssetDatabase.LoadAssetAtPath<TowerData>(AssetDatabase.GUIDToAssetPath(g));
+            if (d != null && d != this && d.Image != null)
+                used.Add(d.Image.name);
+        }
+
+        Sprite pick = null;
+        if (Image == null || used.Contains(Image.name))
+        {
+            foreach (var s in sprites)
+                if (!used.Contains(s.name)) { pick = s; break; }
+
+            Image = pick;
+        }
+
+        if (Image != null)
+        {
+            var m = Regex.Match(Image.name, @"^(?<num>\d+)\.");
+            ID = m.Success ? int.Parse(m.Groups["num"].Value) : ID;
+
+            string rawName = Image.name;
+            Name = Regex.Replace(rawName, @"^\d+\.", "");
+        }
+        else
+        {
+            ID = 0;
+            Name = null;
+        }
+
+        EditorUtility.SetDirty(this);
     }
 #endif
 
@@ -22,7 +61,8 @@ public class TowerData : ScriptableObject
 
         clone.ID = this.ID;
         clone.Name = this.Name;
-        clone.Color= this.Color;
+        clone.Image = this.Image;
+        clone.Color = this.Color;
 
         return clone;
     }

@@ -12,7 +12,7 @@ public class Tower : Entity
         data = _data;
 
         gameObject.name = data.Name;
-        sr.color = data.Color;
+        if (data.Image != null) sr.sprite = data.Image;
     }
     #endregion
 }
