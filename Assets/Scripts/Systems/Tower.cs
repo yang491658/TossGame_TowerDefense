@@ -9,6 +9,7 @@ public class Tower : Entity
     [Header("Rank")]
     [SerializeField] private Transform symbol;
     [SerializeField] private int rank = 1;
+    [SerializeField] private int maxRank = 7;
     private bool isMax = false;
 
 #if UNITY_EDITOR
@@ -23,7 +24,7 @@ public class Tower : Entity
 
     public virtual void RankUp(int _amount = 1)
     {
-        rank = Mathf.Clamp(rank + _amount, 1, 10);
+        rank = Mathf.Clamp(rank + _amount, 1, maxRank);
         UpdateSymbols();
     }
 
@@ -37,7 +38,7 @@ public class Tower : Entity
                 Destroy(child.gameObject);
         }
 
-        if (rank == 10)
+        if (rank == maxRank)
         {
             symbol.localPosition = Vector3.zero;
             if (!isMax)
@@ -65,33 +66,29 @@ public class Tower : Entity
     private Vector2[] GetArray(int _rank)
     {
         float offset = symbol.localScale.x * 1.2f;
-        float x = offset;
-        float y = offset;
 
         Vector2[] grid =
         {
-            new Vector2(-x,  y),
-            new Vector2( 0f, y),
-            new Vector2( x,  y),
-            new Vector2(-x,  0f),
-            new Vector2( 0f, 0f),
-            new Vector2( x,  0f),
-            new Vector2(-x, -y),
-            new Vector2( 0f,-y),
-            new Vector2( x, -y)
+            Vector3.zero ,
+            new Vector3(    -offset ,   -offset ) ,
+            new Vector3(         0f ,   -offset ) ,
+            new Vector3(    +offset ,   -offset ) ,
+            new Vector3(    -offset ,        0f ) ,
+            new Vector3(         0f ,        0f ) ,
+            new Vector3(    +offset ,        0f ) ,
+            new Vector3(    -offset ,   +offset ) ,
+            new Vector3(         0f ,   +offset ) ,
+            new Vector3(    +offset ,   +offset ) ,
         };
 
         switch (_rank)
         {
-            case 1: return new[] { grid[4] };
-            case 2: return new[] { grid[1], grid[7] };
-            case 3: return new[] { grid[1], grid[4], grid[7] };
-            case 4: return new[] { grid[0], grid[2], grid[6], grid[8] };
-            case 5: return new[] { grid[0], grid[2], grid[4], grid[6], grid[8] };
-            case 6: return new[] { grid[0], grid[2], grid[3], grid[5], grid[6], grid[8] };
-            case 7: return new[] { grid[0], grid[2], grid[3], grid[4], grid[5], grid[6], grid[8] };
-            case 8: return new[] { grid[0], grid[1], grid[2], grid[6], grid[7], grid[8], grid[3], grid[5] };
-            case 9:
+            case 1: return new[] { grid[5] };
+            case 2: return new[] { grid[4], grid[6] };
+            case 3: return new[] { grid[1], grid[3], grid[8] };
+            case 4: return new[] { grid[1], grid[3], grid[7], grid[9] };
+            case 5: return new[] { grid[1], grid[3], grid[5], grid[7], grid[9] };
+            case 6: return new[] { grid[1], grid[3], grid[4], grid[6], grid[7], grid[9] };
             default: return grid;
         }
     }
@@ -107,7 +104,7 @@ public class Tower : Entity
 
     public virtual void SetRank(int _rank)
     {
-        rank = Mathf.Clamp(_rank, 1, 10);
+        rank = Mathf.Clamp(_rank, 1, maxRank);
         UpdateSymbols();
     }
 
