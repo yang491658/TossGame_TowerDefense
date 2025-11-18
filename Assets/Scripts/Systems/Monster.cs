@@ -6,15 +6,15 @@ public class Monster : Entity
     private static int sorting = 0;
 
     [Header("Health")]
-    private int health;
-    private TextMeshProUGUI healthText;
+    [SerializeField] private int health;
+    [SerializeField] private TextMeshProUGUI healthText;
 
     [Header("Speed")]
-    private float speed;
+    [SerializeField] private float speed;
 
     [Header("Path")]
-    private Transform[] path;
-    private int pathIndex;
+    [SerializeField] private Transform[] path;
+    [SerializeField] private int pathIndex;
 
     protected override void Awake()
     {

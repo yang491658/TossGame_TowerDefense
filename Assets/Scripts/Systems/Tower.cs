@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class Tower : Entity
 {
     [Header("Default")]
-    [SerializeField] protected TowerData data;
+    [SerializeField] private TowerData data;
     [SerializeField] private Transform outLine;
 
     [Header("Rank")]
@@ -12,17 +16,25 @@ public class Tower : Entity
     [SerializeField] private int maxRank = 7;
     private bool isMax = false;
 
+    [Header("Battle")]
+    [SerializeField] private Monster target;
+    [SerializeField] private Bullet bullet;
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
         if (outLine == null) outLine = transform.Find("OutLine");
+
         if (symbol == null) symbol = transform.Find("Symbol");
+
+        if (bullet == null)
+            bullet = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Bullet.prefab")?.GetComponent<Bullet>();
     }
 #endif
 
-    public virtual void Attack(Monster _monster) { }
+    public void Attack(Monster _monster) { }
 
-    public virtual void RankUp(int _amount = 1)
+    public void RankUp(int _amount = 1)
     {
         rank = Mathf.Clamp(rank + _amount, 1, maxRank);
         UpdateSymbols();
