@@ -1614,22 +1614,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4f4d91872bc35d4eac4704e3f89e2cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inGameUI: {fileID: 0}
-  playTimeText: {fileID: 0}
-  scoreNum: {fileID: 0}
-  settingUI: {fileID: 0}
-  settingScoreNum: {fileID: 0}
-  speedSlider: {fileID: 0}
-  bgmSlider: {fileID: 0}
-  sfxSlider: {fileID: 0}
-  bgmIcon: {fileID: 0}
-  sfxIcon: {fileID: 0}
-  bgmIcons: []
-  sfxIcons: []
-  confirmUI: {fileID: 0}
-  confirmTitle: {fileID: 0}
-  resultUI: {fileID: 0}
-  resultScoreNum: {fileID: 0}
+  inGameUI: {fileID: 463422171}
+  playTimeText: {fileID: 722285320}
+  scoreNum: {fileID: 1222573071}
+  settingUI: {fileID: 565046922}
+  settingScoreNum: {fileID: 79075885}
+  speedSlider: {fileID: 1326418691}
+  bgmSlider: {fileID: 1367106577}
+  sfxSlider: {fileID: 892183346}
+  bgmIcon: {fileID: 185723935}
+  sfxIcon: {fileID: 1928568704}
+  bgmIcons:
+  - {fileID: 21300000, guid: 06a16cb520d0f2449a999572cae2cf97, type: 3}
+  - {fileID: 21300000, guid: cabad5b87dec1fd4e8749fa9f8936e63, type: 3}
+  sfxIcons:
+  - {fileID: 21300000, guid: fd30afab859581246b9ba7593ee3c10c, type: 3}
+  - {fileID: 21300000, guid: 2896697aee29fec4eae8809b364feeb0, type: 3}
+  - {fileID: 21300000, guid: d7f4f52e0d03f214b8b9ff47d92ab909, type: 3}
+  confirmUI: {fileID: 1922433877}
+  confirmTitle: {fileID: 137781734}
+  resultUI: {fileID: 578179199}
+  resultScoreNum: {fileID: 180508595}
 --- !u!4 &264004223
 Transform:
   m_ObjectHideFlags: 0
@@ -6246,6 +6251,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2061510342}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1546117069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df2efd953c0eac439065a0cfac310fb, type: 3}
+  m_Name: Blue
+  m_EditorClassIdentifier: 
+  ID: 3
+  Name: Blue
+  Image: {fileID: 21300000, guid: cd51999c3075cf74aa05a1c90cc33dff, type: 3}
+  Color:
+    serializedVersion: 2
+    rgba: 4294901760
 --- !u!1 &1547773160
 GameObject:
   m_ObjectHideFlags: 0
@@ -6546,6 +6569,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1609510672}
   m_CullTransparentMesh: 1
+--- !u!114 &1614815168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df2efd953c0eac439065a0cfac310fb, type: 3}
+  m_Name: Red
+  m_EditorClassIdentifier: 
+  ID: 1
+  Name: Red
+  Image: {fileID: 21300000, guid: 01f97985223b7ca4ab660643e476d4d7, type: 3}
+  Color:
+    serializedVersion: 2
+    rgba: 4278190335
 --- !u!1 &1618878861
 GameObject:
   m_ObjectHideFlags: 0
@@ -6661,8 +6702,12 @@ MonoBehaviour:
   bgmVol: 1
   sfxVol: 1
   soundClips:
-    bgmClips: []
-    sfxClips: []
+    bgmClips:
+    - {fileID: 8300000, guid: d76ecd11a0b575847ba2a1c53dea9f05, type: 3}
+    - {fileID: 8300000, guid: 49731314153f00046b85f50fdc038198, type: 3}
+    sfxClips:
+    - {fileID: 8300000, guid: 2bd74fec26584e646adfcee5d63449bd, type: 3}
+    - {fileID: 8300000, guid: ceebd236cb9506b488ca55c45d0c9580, type: 3}
 --- !u!4 &1640530186
 Transform:
   m_ObjectHideFlags: 0
@@ -8080,6 +8125,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1881540197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df2efd953c0eac439065a0cfac310fb, type: 3}
+  m_Name: Green
+  m_EditorClassIdentifier: 
+  ID: 2
+  Name: Green
+  Image: {fileID: 21300000, guid: 7c0aaeae5b7d06f45a85e08ccf02e270, type: 3}
+  Color:
+    serializedVersion: 2
+    rgba: 4278255360
 --- !u!1 &1887424005
 GameObject:
   m_ObjectHideFlags: 0
@@ -8982,9 +9045,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8757234db11563c478a55d79795ecf2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterBase: {fileID: 0}
-  towerBase: {fileID: 0}
-  towerDatas: []
+  monsterBase: {fileID: 8757814876248671606, guid: a25fd6c75451e3b4e837ccfdde33535e, type: 3}
+  towerBase: {fileID: 8757814876248671606, guid: cd6b40e57763ae841b4913764f46bea9, type: 3}
+  towerDatas:
+  - {fileID: 1614815168}
+  - {fileID: 1881540197}
+  - {fileID: 1546117069}
   inGame: {fileID: 0}
   map: {fileID: 0}
   mapTile: {fileID: 0}
@@ -8996,7 +9062,11 @@ MonoBehaviour:
   delay: 3
   minDelay: 0.1
   speed: 3
-  path: []
+  path:
+  - {fileID: 1937655796}
+  - {fileID: 1147032451}
+  - {fileID: 1539624494}
+  - {fileID: 890344715}
   pathMargin: {x: 0.88, y: 0.68}
   pathNum: 01000000040000000200000003000000040000000100000003000000020000000100000004000000
 --- !u!4 &2061510342

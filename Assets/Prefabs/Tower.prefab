@@ -345,3 +345,6 @@ MonoBehaviour:
   outLine: {fileID: 6618385927607765839}
   symbol: {fileID: 6968313113729995}
   rank: 1
+  maxRank: 7
+  target: {fileID: 0}
+  bullet: {fileID: -5738441982564329493, guid: e50fab4336ffe364a97a106040d6d21d, type: 3}
