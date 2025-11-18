@@ -181,7 +181,7 @@ public class EntityManager : MonoBehaviour
             {
                 Monster monster = SpawnMonster(monsterPath[0].position + Vector3.left);
 
-                monster.SetHealth(10 + (GameManager.Instance.GetScore() / 100) * 5);
+                monster.SetHealth(10 + (GameManager.Instance.GetScore() / 100));
                 monster.SetSpeed(speed);
                 monster.SetPath(monsterPath);
 
@@ -266,6 +266,7 @@ public class EntityManager : MonoBehaviour
         bullet.SetBullet(_tower.GetSymbol());
         bullet.SetTarget(_tower.GetTarget());
         bullet.SetDamage(_tower.GetDamage());
+        bullet.SetSpeed(_tower.GetSpeed());
 
         bullets.Add(bullet);
 

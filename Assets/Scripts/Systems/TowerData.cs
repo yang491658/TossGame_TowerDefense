@@ -16,6 +16,7 @@ public class TowerData : ScriptableObject
 
     [Header("Battle")]
     public int Damage = 1;
+    public float Speed = 10f;
     public float Delay = 1f;
 
 #if UNITY_EDITOR
@@ -68,6 +69,7 @@ public class TowerData : ScriptableObject
         clone.Image = this.Image;
         clone.Color = this.Color;
         clone.Damage = this.Damage;
+        clone.Speed = this.Speed;
         clone.Delay = this.Delay;
 
         return clone;

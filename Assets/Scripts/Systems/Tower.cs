@@ -15,6 +15,7 @@ public class Tower : Entity
     [Header("Battle")]
     private Monster target;
     private int damage;
+    private float speed;
     private float delay;
     private float timer;
 
@@ -106,7 +107,7 @@ public class Tower : Entity
     #endregion
 
     #region 전투
-    public void Attack()
+    public virtual void Attack()
     {
         timer += Time.deltaTime;
         if (timer < delay) return;
@@ -149,6 +150,7 @@ public class Tower : Entity
         symbol.GetComponent<SpriteRenderer>().color = data.Color;
 
         damage = data.Damage;
+        speed = data.Speed;
         delay = data.Delay;
 
         UpdateRank();
@@ -164,5 +166,6 @@ public class Tower : Entity
 
     public Monster GetTarget() => target;
     public int GetDamage() => damage;
+    public float GetSpeed() => speed;
     #endregion
 }

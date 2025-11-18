@@ -19,4 +19,5 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294901760
   Damage: 1
+  Speed: 10
   Delay: 1

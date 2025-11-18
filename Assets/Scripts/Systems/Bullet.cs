@@ -5,7 +5,7 @@ public class Bullet : Entity
     [Header("Battle")]
     private Monster target;
     private Vector3 targetPos;
-    private float speed = 10f;
+    private float speed;
     private int damage;
 
     protected override void Update()
@@ -16,7 +16,7 @@ public class Bullet : Entity
     }
 
     #region 전투
-    private void Shoot()
+    public virtual void Shoot()
     {
         if (target != null)
             targetPos = target.transform.position;
@@ -44,6 +44,7 @@ public class Bullet : Entity
     }
     public void SetTarget(Monster _mon) => target = _mon;
     public void SetDamage(int _damage) => damage = _damage;
+    public void SetSpeed(float _speed) => speed = _speed;
     #endregion
 
     #region GET
