@@ -15,8 +15,8 @@ public class TowerData : ScriptableObject
     public Color32 Color;
 
     [Header("Battle")]
-    public int damage = 1;
-    public float AttackSpeed = 1f;
+    public int Damage = 1;
+    public float Delay = 1f;
 
 #if UNITY_EDITOR
     private void OnValidate()
@@ -67,8 +67,8 @@ public class TowerData : ScriptableObject
         clone.Name = this.Name;
         clone.Image = this.Image;
         clone.Color = this.Color;
-        clone.damage = this.damage;
-        clone.AttackSpeed = this.AttackSpeed;
+        clone.Damage = this.Damage;
+        clone.Delay = this.Delay;
 
         return clone;
     }

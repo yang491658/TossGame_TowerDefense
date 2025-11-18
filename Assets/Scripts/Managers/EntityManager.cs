@@ -238,7 +238,7 @@ public class EntityManager : MonoBehaviour
 
         bullet.SetBullet(_tower.GetSymbol());
         bullet.SetTarget(_tower.GetTarget());
-        bullet.SetDamage(_tower.GetAttackDamage());
+        bullet.SetDamage(_tower.GetDamage());
 
         bullets.Add(bullet);
 

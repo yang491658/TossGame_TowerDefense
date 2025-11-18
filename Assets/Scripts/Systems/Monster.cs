@@ -46,9 +46,7 @@ public class Monster : Entity
             return;
         }
 
-        Transform targetTrans = path[pathIndex];
-        Vector3 target = targetTrans.position;
-        Vector3 delta = target - transform.position;
+        Vector3 delta = path[pathIndex].position - transform.position;
 
         float arrive = Mathf.Max(speed * Time.deltaTime, 0.1f);
         if (delta.sqrMagnitude < arrive * arrive)
@@ -59,13 +57,10 @@ public class Monster : Entity
                 return;
             }
 
-            targetTrans = path[pathIndex];
-            target = targetTrans.position;
-            delta = target - transform.position;
+            delta = path[pathIndex].position - transform.position;
         }
 
-        Vector3 direction = delta.normalized;
-        Move(direction * speed);
+        Move(delta.normalized * speed);
     }
 
     private void OnBecameInvisible()

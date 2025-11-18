@@ -14,9 +14,9 @@ public class Tower : Entity
 
     [Header("Battle")]
     private Monster target;
-    private int attackDamage;
-    private float attackSpeed = 1f;
-    private float attackTimer;
+    private int damage;
+    private float delay;
+    private float timer;
 
     protected override void Awake()
     {
@@ -108,10 +108,8 @@ public class Tower : Entity
     #region 전투
     public void Attack()
     {
-        if (attackSpeed <= 0f) return;
-
-        attackTimer += Time.deltaTime;
-        if (attackTimer < 1f / attackSpeed) return;
+        timer += Time.deltaTime;
+        if (timer < delay) return;
 
         if (target == null)
         {
@@ -120,7 +118,7 @@ public class Tower : Entity
 
             target = nearest;
         }
-        attackTimer = 0f;
+        timer = 0f;
 
         EntityManager.Instance?.SpawnBullet(this);
     }
@@ -150,8 +148,8 @@ public class Tower : Entity
         outLine.GetComponent<SpriteRenderer>().color = data.Color;
         symbol.GetComponent<SpriteRenderer>().color = data.Color;
 
-        attackDamage = data.damage;
-        attackSpeed = data.AttackSpeed;
+        damage = data.Damage;
+        delay = data.Delay;
 
         UpdateRank();
     }
@@ -165,6 +163,6 @@ public class Tower : Entity
     public bool IsMax() => isMax;
 
     public Monster GetTarget() => target;
-    public int GetAttackDamage() => attackDamage;
+    public int GetDamage() => damage;
     #endregion
 }
