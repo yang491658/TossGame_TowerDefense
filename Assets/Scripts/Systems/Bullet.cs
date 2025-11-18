@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Bullet : Entity
 {
@@ -15,7 +15,7 @@ public class Bullet : Entity
         Shoot();
     }
 
-    #region ÀüÅõ
+    #region ì „íˆ¬
     private void Shoot()
     {
         if (target != null)
