@@ -236,10 +236,18 @@ public class EntityManager : MonoBehaviour
 
     public Tower MergeTower(Tower _select, Tower _target)
     {
-        Tower tower = SpawnTower(0, _target.transform.position, false);
+        if (_select == _target
+            || _select.GetID() != _target.GetID()
+            || _select.GetRank() != _target.GetRank()
+            || _select.IsMax() || _target.IsMax()) return null;
+
+        Tower merge = SpawnTower(0, _target.transform.position, false);
+        merge.SetRank(_target.GetRank() + 1);
+
         DespawnTower(_target);
         DespawnTower(_select);
-        return tower;
+
+        return merge;
     }
 
     public void DespawnTower(Tower _tower)

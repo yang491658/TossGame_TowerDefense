@@ -46,6 +46,7 @@ public class TestManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O))
         {
+            GameManager.Instance?.SetSpeed(GameManager.Instance.GetMaxSpeed());
             isAutoPlay = !isAutoPlay;
             isAutoReplay = !isAutoReplay;
         }
@@ -124,7 +125,7 @@ public class TestManager : MonoBehaviour
 
     private void MergeTower()
     {
-        List<Tower> towers = EntityManager.Instance.GetTowers();
+        List<Tower> towers = EntityManager.Instance?.GetTowers();
         int len = towers.Count;
         if (len < 2) return;
 
@@ -133,27 +134,14 @@ public class TestManager : MonoBehaviour
         for (int n = 0; n < len; n++)
         {
             int i = (start + n) % len;
-            Tower a = towers[i];
-
-            if (a.IsMax()) continue;
-
-            int id = a.GetID();
-            int rank = a.GetRank();
 
             for (int j = 0; j < len; j++)
             {
                 if (i == j) continue;
 
-                Tower b = towers[j];
-
-                if (b.GetID() == id && b.GetRank() == rank)
-                {
-                    EntityManager.Instance.MergeTower(a, b).SetRank(rank + 1);
-                    return;
-                }
+                if (EntityManager.Instance?.MergeTower(towers[i], towers[j]) != null) return;
             }
         }
     }
-
 }
 #endif

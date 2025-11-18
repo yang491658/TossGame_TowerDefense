@@ -283,9 +283,7 @@ public class HandleManager : MonoBehaviour
     {
         Collider2D[] hits = Physics2D.OverlapPointAll(_end, layer);
 
-        bool canMerge = false;
         Tower target = null;
-
         Collider2D selfCol = select.GetCol();
 
         for (int i = 0; i < hits.Length; i++)
@@ -294,17 +292,18 @@ public class HandleManager : MonoBehaviour
             if (selfCol == otherCol) continue;
 
             Tower other = otherCol.GetComponent<Tower>();
-            if (!canMerge && select.GetID() == other.GetID() && !select.IsMax() && select.GetRank() == other.GetRank())
+            if (other != null)
             {
-                canMerge = true;
                 target = other;
                 break;
             }
         }
 
-        if (canMerge)
-            EntityManager.Instance?.MergeTower(select, target).SetRank(target.GetRank() + 1);
-        else
+        Tower merge = null;
+        if (target != null)
+            merge = EntityManager.Instance?.MergeTower(select, target);
+
+        if (merge == null)
             select.transform.position = dragStart + offset;
 
         select.IsDragging(false);
