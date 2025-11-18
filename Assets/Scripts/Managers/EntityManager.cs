@@ -306,6 +306,7 @@ public class EntityManager : MonoBehaviour
     {
         monsters.RemoveAll(m => m == null);
         towers.RemoveAll(t => t == null);
+        bullets.RemoveAll(b => b == null);
 
         delay = delayBase;
         needGold = 0;
