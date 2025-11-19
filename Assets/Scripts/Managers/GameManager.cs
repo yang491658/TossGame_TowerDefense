@@ -65,8 +65,6 @@ public class GameManager : MonoBehaviour
     {
         Pause(false);
         IsGameOver = false;
-        ResetScore();
-        ResetGold();
 
         SoundManager.Instance?.PlayBGM("Default");
 
@@ -76,43 +74,10 @@ public class GameManager : MonoBehaviour
 
         UIManager.Instance?.ResetUI();
         UIManager.Instance?.OpenUI(false);
-    }
 
-    #region 점수
-    public void ScoreUp(int _score = 1)
-    {
-        score += _score;
-        OnChangeScore?.Invoke(score);
+        ResetScore();
+        ResetGold();
     }
-
-    public void ResetScore()
-    {
-        score = 0;
-        OnChangeScore?.Invoke(score);
-    }
-    #endregion
-
-    #region 골드
-    public void GoldUp(int _gold = 1)
-    {
-        gold += _gold;
-        OnChangeGold?.Invoke(gold);
-    }
-
-    public void GoldDown(int _gold)
-    {
-        if (gold < _gold) return;
-
-        gold -= _gold;
-        OnChangeGold?.Invoke(gold);
-    }
-
-    public void ResetGold()
-    {
-        gold = 0;
-        OnChangeGold?.Invoke(gold);
-    }
-    #endregion
 
     #region 진행
     public void Pause(bool _pause)
@@ -162,6 +127,42 @@ public class GameManager : MonoBehaviour
 #if UNITY_WEBGL && !UNITY_EDITOR
         GameOverReact();
 #endif
+    }
+    #endregion
+
+    #region 점수
+    public void ScoreUp(int _score = 1)
+    {
+        score += _score;
+        OnChangeScore?.Invoke(score);
+    }
+
+    public void ResetScore()
+    {
+        score = 0;
+        OnChangeScore?.Invoke(score);
+    }
+    #endregion
+
+    #region 골드
+    public void GoldUp(int _gold = 1)
+    {
+        gold += _gold;
+        OnChangeGold?.Invoke(gold);
+    }
+
+    public void GoldDown(int _gold)
+    {
+        if (gold < _gold) return;
+
+        gold -= _gold;
+        OnChangeGold?.Invoke(gold);
+    }
+
+    public void ResetGold()
+    {
+        gold = 0;
+        OnChangeGold?.Invoke(gold);
     }
     #endregion
 

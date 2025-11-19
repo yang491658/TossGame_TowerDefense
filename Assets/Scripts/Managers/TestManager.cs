@@ -42,6 +42,10 @@ public class TestManager : MonoBehaviour
             GameManager.Instance?.Pause(!GameManager.Instance.IsPaused);
         if (Input.GetKeyDown(KeyCode.G))
             GameManager.Instance?.GameOver();
+        if (Input.GetKeyDown(KeyCode.R))
+            GameManager.Instance?.Replay();
+        if (Input.GetKeyDown(KeyCode.Q))
+            GameManager.Instance?.Quit();
 
         if (Input.GetKeyDown(KeyCode.O))
         {
@@ -50,7 +54,7 @@ public class TestManager : MonoBehaviour
             GameManager.Instance?.SetSpeed(isAuto ? GameManager.Instance.GetMaxSpeed() : 1f);
             GameManager.Instance?.Replay();
         }
-        if (isAuto)
+        if (isAuto && !GameManager.Instance.IsPaused)
         {
             if (GameManager.Instance?.GetGold() >= EntityManager.Instance?.GetNeedGold())
                 if (EntityManager.Instance?.SpawnTower() == null) MergeTower();
@@ -58,12 +62,8 @@ public class TestManager : MonoBehaviour
                 autoRoutine = StartCoroutine(AutoReplay());
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
-            GameManager.Instance?.Replay();
-        if (Input.GetKeyDown(KeyCode.Q))
-            GameManager.Instance?.Quit();
-        if (Input.GetKey(KeyCode.L))
-            GameManager.Instance?.ScoreUp();
+        if (Input.GetKeyDown(KeyCode.L))
+            GameManager.Instance?.GoldUp(1000000);
         #endregion
 
         #region 사운드 테스트

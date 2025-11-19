@@ -106,38 +106,6 @@ public class EntityManager : MonoBehaviour
         SetEntity();
     }
 
-    #region 타일
-    private Vector3 RandomTile()
-    {
-        Tilemap tilemap = mapTile.GetComponent<Tilemap>();
-        BoundsInt bounds = tilemap.cellBounds;
-
-        HashSet<Vector3Int> tiles = new HashSet<Vector3Int>();
-        for (int i = 0; i < towers.Count; i++)
-        {
-            Vector3Int towerCell = tilemap.WorldToCell(towers[i].transform.position);
-            tiles.Add(towerCell);
-        }
-
-        List<Vector3Int> cells = new List<Vector3Int>();
-        for (int x = bounds.xMin; x < bounds.xMax; x++)
-        {
-            for (int y = bounds.yMin; y < bounds.yMax; y++)
-            {
-                Vector3Int cell = new Vector3Int(x, y, 0);
-                if (tilemap.HasTile(cell) && !tiles.Contains(cell))
-                    cells.Add(cell);
-            }
-        }
-
-        if (cells.Count == 0)
-            return default;
-
-        Vector3Int select = cells[Random.Range(0, cells.Count)];
-        return tilemap.GetCellCenterWorld(select);
-    }
-    #endregion
-
     #region 몬스터
     private Monster SpawnMonster(Vector3 _pos)
     {
@@ -198,6 +166,36 @@ public class EntityManager : MonoBehaviour
     #endregion
 
     #region 타워
+    private Vector3 RandomTile()
+    {
+        Tilemap tilemap = mapTile.GetComponent<Tilemap>();
+        BoundsInt bounds = tilemap.cellBounds;
+
+        HashSet<Vector3Int> tiles = new HashSet<Vector3Int>();
+        for (int i = 0; i < towers.Count; i++)
+        {
+            Vector3Int towerCell = tilemap.WorldToCell(towers[i].transform.position);
+            tiles.Add(towerCell);
+        }
+
+        List<Vector3Int> cells = new List<Vector3Int>();
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            {
+                Vector3Int cell = new Vector3Int(x, y, 0);
+                if (tilemap.HasTile(cell) && !tiles.Contains(cell))
+                    cells.Add(cell);
+            }
+        }
+
+        if (cells.Count == 0)
+            return default;
+
+        Vector3Int select = cells[Random.Range(0, cells.Count)];
+        return tilemap.GetCellCenterWorld(select);
+    }
+
     public TowerData SearchTower(int _id) => towerDic.TryGetValue(_id, out var _data) ? _data : null;
     public Tower SpawnTower(int _id = 0, Vector3? _pos = null, bool _useGold = true)
     {
@@ -214,13 +212,7 @@ public class EntityManager : MonoBehaviour
         if (!_pos.HasValue && pos == default)
             return null;
 
-        if (_useGold)
-        {
-            if (GameManager.Instance?.GetGold() < needGold)
-                return null;
-
-            GameManager.Instance?.GoldDown(needGold++);
-        }
+        GameManager.Instance?.GoldDown(_useGold ? needGold++ : 0);
 
         Tower tower = Instantiate(towerBase, pos, Quaternion.identity, towerTrans)
             .GetComponent<Tower>();

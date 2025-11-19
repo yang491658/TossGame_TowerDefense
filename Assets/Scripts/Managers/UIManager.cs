@@ -19,7 +19,8 @@ public class UIManager : MonoBehaviour
     private float playTime = 0f;
     [SerializeField] private TextMeshProUGUI scoreNum;
     [SerializeField] private Button goldbtn;
-    [SerializeField] private TextMeshProUGUI goldText;
+    [SerializeField] private TextMeshProUGUI currentGoldNum;
+    [SerializeField] private TextMeshProUGUI needGoldNum;
 
     [Header("Setting UI")]
     [SerializeField] private GameObject settingUI;
@@ -54,8 +55,10 @@ public class UIManager : MonoBehaviour
             scoreNum = GameObject.Find("InGameUI/Score/ScoreNum")?.GetComponent<TextMeshProUGUI>();
         if (goldbtn == null)
             goldbtn = GameObject.Find("InGameUI/GoldBtn")?.GetComponent<Button>();
-        if (goldText == null)
-            goldText = GameObject.Find("InGameUI/GoldBtn/GoldText")?.GetComponent<TextMeshProUGUI>();
+        if (currentGoldNum == null)
+            currentGoldNum = GameObject.Find("InGameUI/GoldBtn/CurrentGoldNum")?.GetComponent<TextMeshProUGUI>();
+        if (needGoldNum == null)
+            needGoldNum = GameObject.Find("InGameUI/GoldBtn/NeedGoldNum")?.GetComponent<TextMeshProUGUI>();
 
         if (settingUI == null)
             settingUI = GameObject.Find("SettingUI");
@@ -256,8 +259,23 @@ public class UIManager : MonoBehaviour
 
     public void UpdateGold(int _gold)
     {
-        goldText.text = _gold.ToString();
+        currentGoldNum.text = FormatGold(_gold);
+        needGoldNum.text = "/ " + FormatGold(EntityManager.Instance.GetNeedGold());
         goldbtn.interactable = _gold >= EntityManager.Instance?.GetNeedGold();
+    }
+
+    private string FormatGold(int _gold)
+    {
+        string[] units = { "K", "M", "B", "T" };
+
+        for (int i = units.Length; i > 0; i--)
+        {
+            float unit = Mathf.Pow(1000f, i);
+            if (_gold >= unit)
+                return (_gold / unit).ToString("0.0") + units[i - 1];
+        }
+
+        return _gold.ToString();
     }
 
     public void UpdateVolume(SoundType _type, float _volume)
