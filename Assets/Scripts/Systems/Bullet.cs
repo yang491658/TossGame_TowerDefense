@@ -12,11 +12,11 @@ public class Bullet : Entity
     {
         base.Update();
 
-        Shoot();
+        Chase();
     }
 
     #region 전투
-    public virtual void Shoot()
+    public virtual void Chase()
     {
         if (target != null)
             targetPos = target.transform.position;
