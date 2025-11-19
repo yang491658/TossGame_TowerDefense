@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
         OnChangeGold?.Invoke(gold);
     }
 
-    public void GoldDown(int _gold )
+    public void GoldDown(int _gold)
     {
         if (gold < _gold) return;
 
