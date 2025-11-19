@@ -55,7 +55,7 @@ public class EntityManager : MonoBehaviour
         if (bulletBase == null)
             bulletBase = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Bullet.prefab");
 
-        string[] guids = AssetDatabase.FindAssets("t:TowerData", new[] { "Assets/Data/Towers" });
+        string[] guids = AssetDatabase.FindAssets("t:TowerData", new[] { "Assets/Datas/Towers" });
         var tlist = new List<TowerData>(guids.Length);
         for (int i = 0; i < guids.Length; i++)
         {
