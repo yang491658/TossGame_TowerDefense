@@ -166,7 +166,7 @@ public class EntityManager : MonoBehaviour
     #endregion
 
     #region 타워
-    private Vector3 RandomTile()
+    private Vector3 SelectTile(Vector3? _pos = null)
     {
         Tilemap tilemap = mapTile.GetComponent<Tilemap>();
         BoundsInt bounds = tilemap.cellBounds;
@@ -178,22 +178,67 @@ public class EntityManager : MonoBehaviour
             tiles.Add(towerCell);
         }
 
-        List<Vector3Int> cells = new List<Vector3Int>();
+        if (!_pos.HasValue)
+        {
+            List<Vector3Int> cells = new List<Vector3Int>();
+            for (int x = bounds.xMin; x < bounds.xMax; x++)
+            {
+                for (int y = bounds.yMin; y < bounds.yMax; y++)
+                {
+                    Vector3Int cell = new Vector3Int(x, y, 0);
+                    if (tilemap.HasTile(cell) && !tiles.Contains(cell))
+                        cells.Add(cell);
+                }
+            }
+
+            if (cells.Count == 0)
+                return default;
+
+            Vector3Int select = cells[Random.Range(0, cells.Count)];
+            return tilemap.GetCellCenterWorld(select);
+        }
+
+        Vector3 pos = _pos.Value;
+        bool found = false;
+        Vector3Int nearestCell = default;
+        float minSqr = 0f;
+
         for (int x = bounds.xMin; x < bounds.xMax; x++)
         {
             for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
                 Vector3Int cell = new Vector3Int(x, y, 0);
-                if (tilemap.HasTile(cell) && !tiles.Contains(cell))
-                    cells.Add(cell);
+                if (!tilemap.HasTile(cell))
+                    continue;
+
+                Vector3 center = tilemap.GetCellCenterWorld(cell);
+                float sqr = (center - pos).sqrMagnitude;
+
+                if (!found || sqr < minSqr)
+                {
+                    found = true;
+                    minSqr = sqr;
+                    nearestCell = cell;
+                }
             }
         }
 
-        if (cells.Count == 0)
+        if (!found)
             return default;
 
-        Vector3Int select = cells[Random.Range(0, cells.Count)];
-        return tilemap.GetCellCenterWorld(select);
+        if (tiles.Contains(nearestCell))
+            return default;
+
+        return tilemap.GetCellCenterWorld(nearestCell);
+    }
+
+    public bool CanSpawn(Vector3? _pos = null, bool _useGold = true)
+    {
+        if (_useGold)
+            if (GameManager.Instance?.GetGold() < needGold)
+                return false;
+
+        return SelectTile(_pos) != default;
     }
 
     public TowerData SearchTower(int _id) => towerDic.TryGetValue(_id, out var _data) ? _data : null;
@@ -205,12 +250,10 @@ public class EntityManager : MonoBehaviour
 
         if (data == null) return null;
 
-        Vector3 pos = _pos.HasValue
-            ? _pos.Value
-            : RandomTile();
-
-        if (!_pos.HasValue && pos == default)
+        if (!CanSpawn(_pos, _useGold))
             return null;
+
+        Vector3 pos = SelectTile(_pos);
 
         GameManager.Instance?.GoldDown(_useGold ? needGold++ : 0);
 
@@ -231,11 +274,14 @@ public class EntityManager : MonoBehaviour
             || _select.GetRank() != _target.GetRank()
             || _select.IsMax() || _target.IsMax()) return null;
 
-        Tower merge = SpawnTower(0, _target.transform.position, false);
-        merge.SetRank(_target.GetRank() + 1);
+        int rank = _target.GetRank();
+        Vector3 pos = _target.transform.position;
 
-        DespawnTower(_target);
         DespawnTower(_select);
+        DespawnTower(_target);
+
+        Tower merge = SpawnTower(0, pos, false);
+        merge.SetRank(rank + 1);
 
         return merge;
     }

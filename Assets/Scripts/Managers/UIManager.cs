@@ -261,7 +261,8 @@ public class UIManager : MonoBehaviour
     {
         currentGoldNum.text = FormatGold(_gold);
         needGoldNum.text = "/ " + FormatGold(EntityManager.Instance.GetNeedGold());
-        goldbtn.interactable = _gold >= EntityManager.Instance?.GetNeedGold();
+
+        goldbtn.interactable = EntityManager.Instance.CanSpawn();
     }
 
     private string FormatGold(int _gold)
