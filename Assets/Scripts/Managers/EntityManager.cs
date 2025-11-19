@@ -29,17 +29,15 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private List<Monster> monsters = new List<Monster>();
     [SerializeField] private Transform towerTrans;
     [SerializeField] private List<Tower> towers = new List<Tower>();
-    [SerializeField] private Transform bulletTrans;
-    [SerializeField] private List<Bullet> bullets = new List<Bullet>();
 
     [Header("Monster Settings")]
     [SerializeField][Min(0.1f)] private float delay = 5f;
-    [SerializeField][Min(0.1f)] private float minDelay = 0.1f;
+    [SerializeField][Min(0.1f)] private float minDelay = 0.5f;
     private float delayBase;
     private Coroutine spawnRoutine;
 
     [SerializeField] private Transform[] path;
-    [SerializeField] private Vector2 pathMargin = new Vector2(0.88f, 0.68f);
+    [SerializeField] private Vector2 pathMargin = new Vector2(0.90f, 0.72f);
     [SerializeField] private int[] pathNum = { 1, 4, 2, 3, 4, 1, 3, 2, 1, 4 };
 
     [Header("Tower Settings")]
@@ -255,15 +253,15 @@ public class EntityManager : MonoBehaviour
 
         Vector3 pos = SelectTile(_pos);
 
-        GameManager.Instance?.GoldDown(_useGold ? needGold++ : 0);
-
         Tower tower = Instantiate(towerBase, pos, Quaternion.identity, towerTrans)
             .GetComponent<Tower>();
 
         tower.SetData(data);
         tower.transform.localScale = map.transform.localScale;
-
         towers.Add(tower);
+
+        GameManager.Instance?.GoldDown(_useGold ? needGold++ : 0);
+
         return tower;
     }
 
@@ -293,36 +291,12 @@ public class EntityManager : MonoBehaviour
     }
     #endregion
 
-    #region 불릿
-    public Bullet SpawnBullet(Tower _tower)
-    {
-        Bullet bullet = Instantiate(bulletBase, _tower.transform.position, Quaternion.identity, bulletTrans)
-            .GetComponent<Bullet>();
-
-        bullet.SetColor(_tower.GetColor());
-        bullet.SetTarget(_tower.GetTarget());
-        bullet.SetDamage(_tower.GetDamage());
-
-        bullets.Add(bullet);
-
-        return bullet;
-    }
-
-    public void DespawnBullet(Bullet _bullet)
-    {
-        bullets.Remove(_bullet);
-        Destroy(_bullet.gameObject);
-    }
-    #endregion
-
     public void DespawnAll()
     {
         for (int i = monsters.Count - 1; i >= 0; i--)
             DespawnMonster(monsters[i]);
         for (int i = towers.Count - 1; i >= 0; i--)
             DespawnTower(towers[i]);
-        for (int i = bullets.Count - 1; i >= 0; i--)
-            DespawnBullet(bullets[i]);
     }
 
     #region SET
@@ -341,7 +315,6 @@ public class EntityManager : MonoBehaviour
     {
         monsters.RemoveAll(m => m == null);
         towers.RemoveAll(t => t == null);
-        bullets.RemoveAll(b => b == null);
 
         delay = delayBase;
         needGold = 0;
@@ -357,7 +330,6 @@ public class EntityManager : MonoBehaviour
         if (mapRoad == null) mapRoad = GameObject.Find("Road")?.transform;
         if (monsterTrans == null) monsterTrans = GameObject.Find("InGame/Monsters")?.transform;
         if (towerTrans == null) towerTrans = GameObject.Find("InGame/Towers")?.transform;
-        if (bulletTrans == null) bulletTrans = GameObject.Find("InGame/Bullets")?.transform;
 
         SetMap(out float _halfX, out float _halfY);
         SetPath(_halfX, _halfY);
@@ -419,6 +391,7 @@ public class EntityManager : MonoBehaviour
         return nearest;
     }
     public List<Tower> GetTowers() => towers;
+    public GameObject GetBulletBase() => bulletBase;
     public int GetNeedGold() => needGold;
     #endregion
 }

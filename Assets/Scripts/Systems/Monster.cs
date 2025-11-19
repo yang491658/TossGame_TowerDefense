@@ -10,9 +10,9 @@ public class Monster : Entity
     private TextMeshProUGUI healthText;
 
     [Header("Move")]
-    [SerializeField] private float speed = 3f;
-    [SerializeField] private int index;
-    [SerializeField] private Transform[] path;
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private int pathIndex;
+    [SerializeField] private Transform[] paths;
 
     protected override void Awake()
     {
@@ -29,7 +29,7 @@ public class Monster : Entity
     {
         base.Start();
 
-        index = 0;
+        pathIndex = 0;
 
         SetHealth(health);
     }
@@ -38,27 +38,27 @@ public class Monster : Entity
     {
         base.Update();
 
-        if (index >= path.Length)
+        if (pathIndex >= paths.Length)
         {
-            Move(Vector3.right * speed);
+            Move(Vector3.right * moveSpeed);
             return;
         }
 
-        Vector3 delta = path[index].position - transform.position;
+        Vector3 delta = paths[pathIndex].position - transform.position;
 
-        float arrive = Mathf.Max(speed * Time.deltaTime, 0.1f);
+        float arrive = Mathf.Max(moveSpeed * Time.deltaTime, 0.1f);
         if (delta.sqrMagnitude < arrive * arrive)
         {
-            if (++index >= path.Length)
+            if (++pathIndex >= paths.Length)
             {
-                Move(Vector3.right * speed);
+                Move(Vector3.right * moveSpeed);
                 return;
             }
 
-            delta = path[index].position - transform.position;
+            delta = paths[pathIndex].position - transform.position;
         }
 
-        Move(delta.normalized * speed);
+        Move(delta.normalized * moveSpeed);
     }
 
     private void OnBecameInvisible()
@@ -91,8 +91,8 @@ public class Monster : Entity
     }
     public void SetPath(Transform[] _path)
     {
-        path = _path;
-        index = 0;
+        paths = _path;
+        pathIndex = 0;
     }
     #endregion
 }

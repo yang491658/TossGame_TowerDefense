@@ -14,8 +14,8 @@ public class Tower : Entity
 
     [Header("Battle")]
     [SerializeField] private Monster target;
-    [SerializeField] private int damage;
-    private float timer;
+    [SerializeField] private int attackDamage;
+    private float attackTimer;
 
     protected override void Awake()
     {
@@ -103,8 +103,8 @@ public class Tower : Entity
     #region 전투
     public virtual void Attack()
     {
-        timer -= Time.deltaTime;
-        if (timer > 0f) return;
+        attackTimer -= Time.deltaTime;
+        if (attackTimer > 0f) return;
 
         if (target == null)
         {
@@ -113,9 +113,18 @@ public class Tower : Entity
 
             target = nearest;
         }
-        EntityManager.Instance?.SpawnBullet(this);
+        Shoot();
 
-        timer = 3f / rank;
+        attackTimer = 3f / rank;
+    }
+
+    public virtual void Shoot()
+    {
+        GameObject bulletBase = EntityManager.Instance?.GetBulletBase();
+        Bullet bullet = Instantiate(bulletBase, transform.position, Quaternion.identity, transform)
+            .GetComponent<Bullet>();
+
+        bullet.SetBullet(this);
     }
     #endregion
 
@@ -130,7 +139,7 @@ public class Tower : Entity
     public void SetRank(int _rank)
     {
         rank = Mathf.Clamp(_rank, 1, maxRank);
-        damage = data.Damage * rank;
+        attackDamage = data.Damage * rank;
         UpdateRank();
     }
 
@@ -144,7 +153,7 @@ public class Tower : Entity
         outLine.GetComponent<SpriteRenderer>().color = data.Color;
         symbol.GetComponent<SpriteRenderer>().color = data.Color;
 
-        damage = data.Damage;
+        attackDamage = data.Damage;
 
         SetRank(1);
     }
@@ -158,6 +167,6 @@ public class Tower : Entity
     public bool IsMax() => isMax;
 
     public Monster GetTarget() => target;
-    public int GetDamage() => damage;
+    public int GetDamage() => attackDamage;
     #endregion
 }

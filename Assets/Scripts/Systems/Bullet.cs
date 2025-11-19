@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Bullet : Entity
 {
     [Header("Battle")]
     [SerializeField] private Monster target;
     private Vector3 targetPos;
-    [SerializeField] private int damage;
-    [SerializeField] private float speed = 10f;
+    [SerializeField] private int attackDamage;
+    [SerializeField] private float moveSpeed = 10f;
 
     protected override void Update()
     {
@@ -26,20 +27,31 @@ public class Bullet : Entity
         if (toTarget.sqrMagnitude < 0.01f)
         {
             if (target != null)
-                target.TakeDamage(damage);
+                target.TakeDamage(attackDamage);
 
-            EntityManager.Instance?.DespawnBullet(this);
+            Destroy(gameObject);
             return;
         }
 
-        Move(toTarget.normalized * speed);
+        Move(toTarget.normalized * moveSpeed);
     }
     #endregion
 
     #region SET
-    public void SetColor(Color _color) => sr.color = _color;
-    public void SetTarget(Monster _mon) => target = _mon;
-    public void SetDamage(int _damage) => damage = _damage;
+    public void SetBullet(Tower _tower)
+    {
+        Vector3 baseScale = transform.localScale;
+        Vector3 towerScale = _tower.transform.lossyScale;
+        transform.localScale = new Vector3(
+            baseScale.x / towerScale.x,
+            baseScale.y / towerScale.y,
+            baseScale.z / towerScale.z
+        );
+
+        sr.color = _tower.GetColor();
+        target = _tower.GetTarget();
+        attackDamage = _tower.GetDamage();
+    }
     #endregion
 
     #region GET
