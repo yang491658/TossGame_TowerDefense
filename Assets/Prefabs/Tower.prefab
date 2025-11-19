@@ -344,6 +344,7 @@ MonoBehaviour:
   data: {fileID: 0}
   outLine: {fileID: 0}
   symbol: {fileID: 0}
-  rank: 1
+  rank: 0
   target: {fileID: 0}
-  damage: 0
+  attackDamage: 0
+  attackSpeed: 0

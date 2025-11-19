@@ -15,6 +15,7 @@ public class Tower : Entity
     [Header("Battle")]
     [SerializeField] private Monster target;
     [SerializeField] private int attackDamage;
+    [SerializeField] private float attackSpeed;
     private float attackTimer;
 
     protected override void Awake()
@@ -115,7 +116,7 @@ public class Tower : Entity
         }
         Shoot();
 
-        attackTimer = 3f / rank;
+        attackTimer = attackSpeed;
     }
 
     public virtual void Shoot()
@@ -140,6 +141,7 @@ public class Tower : Entity
     {
         rank = Mathf.Clamp(_rank, 1, maxRank);
         attackDamage = data.Damage * rank;
+        attackSpeed = 3f / rank;
         UpdateRank();
     }
 
@@ -152,8 +154,6 @@ public class Tower : Entity
 
         outLine.GetComponent<SpriteRenderer>().color = data.Color;
         symbol.GetComponent<SpriteRenderer>().color = data.Color;
-
-        attackDamage = data.Damage;
 
         SetRank(1);
     }

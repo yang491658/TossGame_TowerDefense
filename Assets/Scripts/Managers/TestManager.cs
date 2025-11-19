@@ -62,7 +62,7 @@ public class TestManager : MonoBehaviour
                 autoRoutine = StartCoroutine(AutoReplay());
         }
 
-        if (Input.GetKey(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L))
             GameManager.Instance?.GoldUp(10000);
         #endregion
 
