@@ -32,7 +32,7 @@ public class TestManager : MonoBehaviour
     private void Start() // 임시
     {
         isAuto = true;
-        GameManager.Instance?.SetSpeed(GameManager.Instance.GetMaxSpeed() );
+        GameManager.Instance?.SetSpeed(GameManager.Instance.GetMaxSpeed());
         SoundManager.Instance?.ToggleBGM();
     }
 
