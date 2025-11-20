@@ -9,6 +9,8 @@ public class Tower : Entity
     private SpriteRenderer outLineSR;
     private SpriteRenderer symbolSR;
 
+    private Vector3 slot;
+
     [Header("Rank")]
     [SerializeField] private Transform symbol;
     [SerializeField] private int rank;
@@ -31,6 +33,8 @@ public class Tower : Entity
 
         outLineSR = outLine.GetComponent<SpriteRenderer>();
         symbolSR = symbol.GetComponent<SpriteRenderer>();
+
+        slot = transform.position;
     }
 
     protected override void Update()
@@ -140,6 +144,7 @@ public class Tower : Entity
     public void Sell()
     {
         GameManager.Instance?.GoldUp(GetRank());
+        EntityManager.Instance?.IsSell(Vector3.one);
         EntityManager.Instance?.DespawnTower(this);
     }
 
@@ -178,6 +183,8 @@ public class Tower : Entity
     #region GET
     public int GetID() => data.ID;
     public Color GetColor() => data.Color;
+
+    public Vector3 GetSlot() => slot;
 
     public int GetRank() => rank;
     public bool IsMax() => isMax;

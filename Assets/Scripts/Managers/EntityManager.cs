@@ -176,7 +176,7 @@ public class EntityManager : MonoBehaviour
         HashSet<Vector3Int> slots = new HashSet<Vector3Int>();
         for (int i = 0; i < towers.Count; i++)
         {
-            Vector3Int towerCell = tilemap.WorldToCell(towers[i].transform.position);
+            Vector3Int towerCell = tilemap.WorldToCell(towers[i].GetSlot());
             slots.Add(towerCell);
         }
 
