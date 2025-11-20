@@ -13,8 +13,7 @@ public class Monster : Entity
     [Header("Battle")]
     [SerializeField] private int health = 5;
     private TextMeshProUGUI healthText;
-    [SerializeField] private int dropGold = 1;
-
+    [SerializeField] private int gold = 1;
 
     protected override void Awake()
     {
@@ -78,7 +77,7 @@ public class Monster : Entity
     public void Die()
     {
         GameManager.Instance?.ScoreUp();
-        GameManager.Instance?.GoldUp(dropGold);
+        GameManager.Instance?.GoldUp(gold);
         EntityManager.Instance?.DespawnMonster(this);
     }
     #endregion
@@ -89,7 +88,7 @@ public class Monster : Entity
         SetHealth(health * _set);
 
         pathIndex = 0;
-        dropGold *= _set;
+        gold *= _set;
     }
 
     public void SetHealth(int _health)

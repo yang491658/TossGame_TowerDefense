@@ -64,8 +64,7 @@ public class TestManager : MonoBehaviour
                 autoRoutine = StartCoroutine(AutoReplay());
         }
 
-        if (Input.GetKeyDown(KeyCode.L))
-            GameManager.Instance?.GoldUp(10000);
+        if (Input.GetKeyDown(KeyCode.L)) GiveGold();
         #endregion
 
         #region 사운드 테스트
@@ -147,4 +146,6 @@ public class TestManager : MonoBehaviour
             }
         }
     }
+
+    public void GiveGold() => GameManager.Instance?.GoldUp(100_0000);
 }

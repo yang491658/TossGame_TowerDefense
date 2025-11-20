@@ -20,18 +20,21 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private TowerData[] towerDatas;
     private readonly Dictionary<int, TowerData> towerDic = new Dictionary<int, TowerData>();
 
-    [Header("Entities Settings")]
+    [Header("Entity Settings")]
     [SerializeField] private Transform inGame;
     [SerializeField] private Transform monsterTrans;
     [SerializeField] private List<Monster> monsters = new List<Monster>();
     [SerializeField] private Transform towerTrans;
     [SerializeField] private List<Tower> towers = new List<Tower>();
 
-    [Header("Entities Settings")]
+    [Header("Map Settings")]
     [SerializeField] private Transform map;
-    [SerializeField] private Transform mapTile;
+    [SerializeField] private Transform mapSlot;
     [SerializeField] private Transform mapRoad;
     [SerializeField] private Transform mapSell;
+    private Tilemap mapSlotTilemap;
+    private Tilemap mapRoadTilemap;
+    private Tilemap mapSellTilemap;
 
     [Header("Monster Settings")]
     [SerializeField][Min(0.1f)] private float delay = 5f;
@@ -75,7 +78,7 @@ public class EntityManager : MonoBehaviour
                 plist.Add(t);
         }
 
-        plist.Sort((a, b) => GetPathIndex(a.name).CompareTo(GetPathIndex(b.name)));
+        plist.Sort((_a, _b) => GetPathIndex(_a.name).CompareTo(GetPathIndex(_b.name)));
         path = plist.ToArray();
     }
 
@@ -164,17 +167,17 @@ public class EntityManager : MonoBehaviour
     }
     #endregion
 
-    #region 타워
-    private Vector3 SelectTile(Vector3? _pos = null)
+    #region 슬롯
+    private Vector3 SelectSlot(Vector3? _pos = null)
     {
-        Tilemap tilemap = mapTile.GetComponent<Tilemap>();
+        Tilemap tilemap = mapSlotTilemap;
         BoundsInt bounds = tilemap.cellBounds;
 
-        HashSet<Vector3Int> tiles = new HashSet<Vector3Int>();
+        HashSet<Vector3Int> slots = new HashSet<Vector3Int>();
         for (int i = 0; i < towers.Count; i++)
         {
             Vector3Int towerCell = tilemap.WorldToCell(towers[i].transform.position);
-            tiles.Add(towerCell);
+            slots.Add(towerCell);
         }
 
         if (!_pos.HasValue)
@@ -185,7 +188,7 @@ public class EntityManager : MonoBehaviour
                 for (int y = bounds.yMin; y < bounds.yMax; y++)
                 {
                     Vector3Int cell = new Vector3Int(x, y, 0);
-                    if (tilemap.HasTile(cell) && !tiles.Contains(cell))
+                    if (tilemap.HasTile(cell) && !slots.Contains(cell))
                         cells.Add(cell);
                 }
             }
@@ -225,7 +228,7 @@ public class EntityManager : MonoBehaviour
         if (!found)
             return default;
 
-        if (tiles.Contains(nearestCell))
+        if (slots.Contains(nearestCell))
             return default;
 
         return tilemap.GetCellCenterWorld(nearestCell);
@@ -237,9 +240,11 @@ public class EntityManager : MonoBehaviour
             if (GameManager.Instance?.GetGold() < needGold)
                 return false;
 
-        return SelectTile(_pos) != default;
+        return SelectSlot(_pos) != default;
     }
+    #endregion
 
+    #region 타워
     public TowerData SearchTower(int _id) => towerDic.TryGetValue(_id, out var _data) ? _data : null;
     public Tower SpawnTower(int _id = 0, Vector3? _pos = null, bool _useGold = true)
     {
@@ -252,7 +257,7 @@ public class EntityManager : MonoBehaviour
         if (!CanSpawn(_pos, _useGold))
             return null;
 
-        Vector3 pos = SelectTile(_pos);
+        Vector3 pos = SelectSlot(_pos);
 
         Tower tower = Instantiate(towerBase, pos, Quaternion.identity, towerTrans)
             .GetComponent<Tower>();
@@ -283,12 +288,6 @@ public class EntityManager : MonoBehaviour
         merge.SetRank(rank + 1);
 
         return merge;
-    }
-
-    public void SellTower(Tower _tower)
-    {
-        GameManager.Instance?.GoldUp(_tower.GetRank());
-        DespawnTower(_tower);
     }
 
     public void DespawnTower(Tower _tower)
@@ -322,8 +321,8 @@ public class EntityManager : MonoBehaviour
 
     public void ResetEntity()
     {
-        monsters.RemoveAll(m => m == null);
-        towers.RemoveAll(t => t == null);
+        monsters.RemoveAll(_monster => _monster == null);
+        towers.RemoveAll(_tower => _tower == null);
 
         delay = delayBase;
         needGold = 0;
@@ -334,12 +333,16 @@ public class EntityManager : MonoBehaviour
         delayBase = delay;
 
         if (inGame == null) inGame = GameObject.Find("InGame")?.transform;
-        if (map == null) map = GameObject.Find("Map")?.transform;
-        if (mapTile == null) mapTile = GameObject.Find("Tile")?.transform;
-        if (mapRoad == null) mapRoad = GameObject.Find("Road")?.transform;
-        if (mapSell == null) mapSell = GameObject.Find("Sell")?.transform;
         if (monsterTrans == null) monsterTrans = GameObject.Find("InGame/Monsters")?.transform;
         if (towerTrans == null) towerTrans = GameObject.Find("InGame/Towers")?.transform;
+
+        if (map == null) map = GameObject.Find("Map")?.transform;
+        if (mapSlot == null) mapSlot = GameObject.Find("Slot")?.transform;
+        if (mapRoad == null) mapRoad = GameObject.Find("Road")?.transform;
+        if (mapSell == null) mapSell = GameObject.Find("Sell")?.transform;
+        mapSlotTilemap = mapSlot.GetComponent<Tilemap>();
+        mapRoadTilemap = mapRoad.GetComponent<Tilemap>();
+        mapSellTilemap = mapSell.GetComponent<Tilemap>();
 
         SetMap(out float _halfX, out float _halfY);
         SetPath(_halfX, _halfY);
@@ -352,7 +355,7 @@ public class EntityManager : MonoBehaviour
         _halfX = r.xMax * pathMargin.x;
         _halfY = r.yMax * pathMargin.y;
 
-        Tilemap tilemap = mapRoad.GetComponent<Tilemap>();
+        Tilemap tilemap = mapRoadTilemap;
         BoundsInt bounds = tilemap.cellBounds;
         Vector3Int cell = new Vector3Int(bounds.xMin + 1, bounds.yMin + 1, 0);
         Vector3 world = tilemap.GetCellCenterWorld(cell);
@@ -376,11 +379,18 @@ public class EntityManager : MonoBehaviour
     #region GET
     public bool IsSell(Vector3 _pos)
     {
-        Tilemap tilemap = mapSell.GetComponent<Tilemap>();
+        Tilemap tilemap = mapSellTilemap;
         if (tilemap == null) return false;
 
         Vector3Int cell = tilemap.WorldToCell(_pos);
-        return tilemap.HasTile(cell);
+        bool isSell = tilemap.HasTile(cell);
+
+        Color color = Color.yellow;
+        color.a = 50f / 255f;
+        if (isSell) color = Color.red;
+
+        tilemap.color = color;
+        return isSell;
     }
 
     public Monster GetMonster()

@@ -2341,7 +2341,7 @@ GameObject:
   - component: {fileID: 548199258}
   - component: {fileID: 548199257}
   m_Layer: 3
-  m_Name: Tile
+  m_Name: Slot
   m_TagString: Background
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3064,10 +3064,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 892690365}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: GoldUp
-        m_Mode: 3
+      - m_Target: {fileID: 1407473049}
+        m_TargetAssemblyTypeName: TestManager, Assembly-CSharp
+        m_MethodName: GiveGold
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9324,7 +9324,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 1, b: 0, a: 0.49019608}
+  m_Color: {r: 1, g: 1, b: 0, a: 0.19607843}
   m_Origin: {x: -6, y: -11, z: 0}
   m_Size: {x: 13, y: 19, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 0}
@@ -10123,7 +10123,7 @@ MonoBehaviour:
   towerTrans: {fileID: 0}
   towers: []
   map: {fileID: 0}
-  mapTile: {fileID: 0}
+  mapSlot: {fileID: 0}
   mapRoad: {fileID: 0}
   mapSell: {fileID: 0}
   delay: 5

@@ -134,6 +134,12 @@ public class Tower : Entity
         bullet.SetBullet(this);
     }
     #endregion
+    
+    public void Sell()
+    {
+        GameManager.Instance?.GoldUp(GetRank());
+        EntityManager.Instance?.DespawnTower(this);
+    }
 
     #region SET
     public void IsDragging(bool _on)
@@ -146,9 +152,10 @@ public class Tower : Entity
     public void SetRank(int _rank)
     {
         rank = Mathf.Clamp(_rank, 1, maxRank);
+        UpdateRank();
+
         attackDamage = data.AttackDamage * rank;
         attackSpeed = data.AttackSpeed / rank;
-        UpdateRank();
     }
 
     public virtual void SetData(TowerData _data)

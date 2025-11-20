@@ -277,14 +277,15 @@ public class HandleManager : MonoBehaviour
     private void OnDragMove(Vector3 _start, Vector3 _current)
     {
         select.transform.position = _current + offset;
+
+        EntityManager.Instance?.IsSell(_current);
     }
 
     private void OnDragEnd(Vector3 _start, Vector3 _end)
     {
         if (EntityManager.Instance.IsSell(_end))
         {
-            EntityManager.Instance?.SellTower(select);
-
+            select.Sell();
             select = null;
             return;
         }
@@ -342,7 +343,7 @@ public class HandleManager : MonoBehaviour
         Tower tower = hit.GetComponent<Tower>();
         if (tower == null) return;
 
-        EntityManager.Instance?.SellTower(tower);
+        tower.Sell();
     }
 
     private void AddClick(Vector3 _pos, Color _color)
