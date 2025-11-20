@@ -269,7 +269,7 @@ public class HandleManager : MonoBehaviour
         Collider2D hit = Physics2D.OverlapPoint(_pos, layer);
 
         select = hit.GetComponent<Tower>();
-        select.IsDragging(true);
+        select.DragOn(true);
 
         offset = select.transform.position - _pos;
     }
@@ -315,7 +315,7 @@ public class HandleManager : MonoBehaviour
         if (merge == null)
             select.transform.position = dragStart + offset;
 
-        select.IsDragging(false);
+        select.DragOn(false);
         select = null;
     }
 

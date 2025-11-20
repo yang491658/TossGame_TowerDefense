@@ -5,10 +5,8 @@ public class Tower : Entity
     [Header("Data")]
     [SerializeField] private TowerData data;
     [SerializeField] private Transform outLine;
-
     private SpriteRenderer outLineSR;
     private SpriteRenderer symbolSR;
-
     private Vector3 slot;
 
     [Header("Rank")]
@@ -22,6 +20,9 @@ public class Tower : Entity
     [SerializeField] private int attackDamage;
     [SerializeField] private float attackSpeed;
     private float attackTimer;
+
+    [Header("Control")]
+    private bool isDragging;
 
     protected override void Awake()
     {
@@ -40,7 +41,7 @@ public class Tower : Entity
     {
         base.Update();
 
-        Attack();
+        if (!isDragging) Attack();
     }
 
     #region 랭크
@@ -117,16 +118,13 @@ public class Tower : Entity
         attackTimer -= Time.deltaTime;
         if (attackTimer > 0f) return;
 
-        Monster nearest = EntityManager.Instance?.GetMonster(transform.position);
-        if (nearest == null)
+        if (target == null)
         {
-            target = null;
-            return;
+            target = EntityManager.Instance?.GetMonster(transform.position);
+            if (target == null) return;
         }
 
-        target = nearest;
         Shoot();
-
         attackTimer = attackSpeed;
     }
 
@@ -139,21 +137,15 @@ public class Tower : Entity
         bullet.SetBullet(this);
     }
     #endregion
-    
-    public void Sell()
-    {
-        GameManager.Instance?.GoldUp(GetRank());
-        EntityManager.Instance?.IsSell(Vector3.one);
-        EntityManager.Instance?.DespawnTower(this);
-    }
 
-    #region SET
-    public void IsDragging(bool _on)
+    #region 조작
+    public void DragOn(bool _on)
     {
+        isDragging = _on;
+
         int baseOrder = _on ? 1000 : 0;
 
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
-
         for (int i = 0; i < renderers.Length; i++)
         {
             SpriteRenderer r = renderers[i];
@@ -167,6 +159,15 @@ public class Tower : Entity
         }
     }
 
+    public void Sell()
+    {
+        GameManager.Instance?.GoldUp(GetRank());
+        EntityManager.Instance?.IsSell(Vector3.one);
+        EntityManager.Instance?.DespawnTower(this);
+    }
+    #endregion
+
+    #region SET
     public void SetRank(int _rank)
     {
         rank = Mathf.Clamp(_rank, 1, maxRank);
@@ -201,5 +202,6 @@ public class Tower : Entity
 
     public Monster GetTarget() => target;
     public int GetDamage() => attackDamage;
+    public bool IsDragging() => isDragging;
     #endregion
 }

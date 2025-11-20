@@ -132,25 +132,29 @@ public class TestManager : MonoBehaviour
     private void AutoMergeTower()
     {
         List<Tower> towers = EntityManager.Instance?.GetTowers();
+        if (towers == null) return;
+
         int len = towers.Count;
         if (len < 2) return;
 
         int maxRank = rank;
         if (maxRank < 1) maxRank = 1;
 
-        for (int rank = 1; rank < maxRank; rank++)
+        for (int r = 1; r < maxRank; r++)
         {
             for (int i = 0; i < len; i++)
             {
                 Tower a = towers[i];
-                if (a.GetRank() != rank) continue;
+                if (a == null || a.IsDragging()) continue;
+                if (a.GetRank() != r) continue;
 
                 for (int j = 0; j < len; j++)
                 {
                     if (i == j) continue;
 
                     Tower b = towers[j];
-                    if (b.GetRank() != rank) continue;
+                    if (b == null || b.IsDragging()) continue;
+                    if (b.GetRank() != r) continue;
 
                     if (EntityManager.Instance?.MergeTower(a, b) != null)
                         return;
@@ -162,24 +166,32 @@ public class TestManager : MonoBehaviour
     private void MergeTower()
     {
         List<Tower> towers = EntityManager.Instance?.GetTowers();
+        if (towers == null) return;
+
         int len = towers.Count;
         if (len < 2) return;
 
         HashSet<int> rankSet = new HashSet<int>();
         for (int i = 0; i < len; i++)
-            rankSet.Add(towers[i].GetRank());
+        {
+            Tower t = towers[i];
+            if (t == null || t.IsDragging()) continue;
+            rankSet.Add(t.GetRank());
+        }
 
         List<int> ranks = new List<int>(rankSet);
         ranks.Sort();
 
         for (int r = 0; r < ranks.Count; r++)
         {
-            int rank = ranks[r];
+            int curRank = ranks[r];
 
             List<int> indices = new List<int>();
             for (int i = 0; i < len; i++)
             {
-                if (towers[i].GetRank() == rank)
+                Tower t = towers[i];
+                if (t == null || t.IsDragging()) continue;
+                if (t.GetRank() == curRank)
                     indices.Add(i);
             }
 
