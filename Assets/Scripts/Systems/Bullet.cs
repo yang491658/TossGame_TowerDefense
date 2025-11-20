@@ -46,7 +46,7 @@ public class Bullet : Entity
 
         Vector3 toAfter = targetPos - transform.position;
 
-        if (toBefore != Vector3.zero && Vector3.Dot(toBefore, toAfter) < 0.1f)
+        if (toBefore != Vector3.zero && Vector3.Dot(toBefore, toAfter) < 0.5f)
             Destroy(gameObject);
     }
 

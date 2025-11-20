@@ -35,7 +35,7 @@ public class EntityManager : MonoBehaviour
 
     [Header("Monster Settings")]
     [SerializeField][Min(0.1f)] private float delay = 5f;
-    [SerializeField][Min(0.1f)] private float minDelay = 0.3f;
+    [SerializeField][Min(0.1f)] private float minDelay = 0.1f;
     private float delayBase;
     private Coroutine spawnRoutine;
 
