@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8df2efd953c0eac439065a0cfac310fb, type: 3}
-  m_Name: Tower00_Tower
+  m_Name: Tower01_Tower
   m_EditorClassIdentifier: 
-  ID: 0
+  ID: 1
   Name: Tower
-  Image: {fileID: 21300000, guid: 01f97985223b7ca4ab660643e476d4d7, type: 3}
+  BaseImage: {fileID: 21300000, guid: 01f97985223b7ca4ab660643e476d4d7, type: 3}
+  SybolImage: {fileID: 21300000, guid: 31b9d2d26ca84d1459b4adfeb57d0315, type: 3}
   Color: {r: 1, g: 0, b: 0, a: 1}
   AttackDamage: 1
   AttackSpeed: 3

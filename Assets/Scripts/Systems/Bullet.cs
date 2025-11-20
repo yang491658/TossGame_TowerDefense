@@ -47,8 +47,6 @@ public class Bullet : Entity
         if (toBefore != Vector3.zero && Vector3.Dot(toBefore, toAfter) < 0.3f)
             Destroy(gameObject);
     }
-
-
     #endregion
 
     #region SET

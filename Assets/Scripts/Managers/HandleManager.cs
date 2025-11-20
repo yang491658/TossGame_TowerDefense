@@ -27,6 +27,11 @@ public class HandleManager : MonoBehaviour
     private Vector3 dragStart;
     private Vector3 dragCurrent;
     private bool isOverUI;
+    
+    [Header("Drag Slow")]
+    [SerializeField] private float slowSpeed = 0.5f;
+    private float prevSpeed;
+    private bool isSlow;
 
 #if UNITY_EDITOR
     [Header("Mark")]
@@ -272,6 +277,13 @@ public class HandleManager : MonoBehaviour
         select.DragOn(true);
 
         offset = select.transform.position - _pos;
+
+        if (!isSlow)
+        {
+            prevSpeed = GameManager.Instance.GetSpeed();
+            GameManager.Instance?.SetSpeed(slowSpeed);
+            isSlow = true;
+        }
     }
 
     private void OnDragMove(Vector3 _start, Vector3 _current)
@@ -287,6 +299,12 @@ public class HandleManager : MonoBehaviour
         {
             select.Sell();
             select = null;
+
+            if (isSlow)
+            {
+                GameManager.Instance.SetSpeed(prevSpeed);
+                isSlow = false;
+            }
             return;
         }
 
@@ -317,6 +335,12 @@ public class HandleManager : MonoBehaviour
 
         select.DragOn(false);
         select = null;
+
+        if (isSlow)
+        {
+            GameManager.Instance.SetSpeed(prevSpeed);
+            isSlow = false;
+        }
     }
 
 #if UNITY_EDITOR

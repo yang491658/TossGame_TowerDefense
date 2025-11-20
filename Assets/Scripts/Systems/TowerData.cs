@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using System.IO;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,10 +11,11 @@ using UnityEditor;
 [CreateAssetMenu(fileName = "Tower", menuName = "TowerData", order = 1)]
 public class TowerData : ScriptableObject
 {
-    [Header("Default")]
+    [Header("Data")]
     public int ID;
     public string Name;
-    public Sprite Image;
+    public Sprite BaseImage;
+    public Sprite SybolImage;
     public Color Color = Color.black;
 
     [Header("Battle")]
@@ -23,42 +26,80 @@ public class TowerData : ScriptableObject
     private void OnValidate()
     {
         var sprites = Resources.LoadAll<Sprite>("Images/Towers");
+        var baseSprites = new List<Sprite>();
+
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            Sprite s = sprites[i];
+            string path = AssetDatabase.GetAssetPath(s);
+            string dir = Path.GetDirectoryName(path);
+            if (string.IsNullOrEmpty(dir)) continue;
+
+            dir = dir.Replace("\\", "/");
+            if (!dir.EndsWith("/Images/Towers")) continue;
+
+            baseSprites.Add(s);
+        }
+
         var used = new HashSet<string>();
-        var excluded = new HashSet<string> { "OutLine", "Symbol" };
+
         foreach (var g in AssetDatabase.FindAssets("t:TowerData"))
         {
             var d = AssetDatabase.LoadAssetAtPath<TowerData>(AssetDatabase.GUIDToAssetPath(g));
-            if (d != null && d != this && d.Image != null && !excluded.Contains(d.Image.name))
-                used.Add(d.Image.name);
+            if (d != null && d != this && d.BaseImage != null)
+            {
+                string path = AssetDatabase.GetAssetPath(d.BaseImage);
+                string dir = Path.GetDirectoryName(path);
+                if (string.IsNullOrEmpty(dir)) continue;
+
+                dir = dir.Replace("\\", "/");
+                if (!dir.EndsWith("/Images/Towers")) continue;
+
+                used.Add(d.BaseImage.name);
+            }
         }
 
         Sprite pick = null;
-        if (Image == null || used.Contains(Image.name) || excluded.Contains(Image.name))
+        if (BaseImage == null || used.Contains(BaseImage.name))
         {
-            foreach (var s in sprites)
+            for (int i = 0; i < baseSprites.Count; i++)
             {
+                Sprite s = baseSprites[i];
                 if (used.Contains(s.name)) continue;
-                if (excluded.Contains(s.name)) continue;
 
                 pick = s;
                 break;
             }
-
-            Image = pick;
+            BaseImage = pick;
         }
 
-        if (Image != null)
+        if (BaseImage != null)
         {
-            var m = Regex.Match(Image.name, @"^(?<num>\d+)\.");
+            var m = Regex.Match(BaseImage.name, @"^(?<num>\d+)\.");
             ID = m.Success ? int.Parse(m.Groups["num"].Value) : ID;
 
-            string rawName = Image.name;
+            string rawName = BaseImage.name;
             Name = Regex.Replace(rawName, @"^\d+\.", "");
         }
         else
         {
             ID = 0;
             Name = null;
+        }
+
+        var symbolSprites = Resources.LoadAll<Sprite>("Images/Towers/Sybol");
+        if (ID > 0)
+        {
+            string prefix = ID.ToString("D2") + ".";
+            for (int i = 0; i < symbolSprites.Length; i++)
+            {
+                Sprite s = symbolSprites[i];
+                if (s.name.StartsWith(prefix))
+                {
+                    SybolImage = s;
+                    break;
+                }
+            }
         }
 
         EditorUtility.SetDirty(this);
@@ -73,7 +114,8 @@ public class TowerData : ScriptableObject
 
         clone.ID = this.ID;
         clone.Name = this.Name;
-        clone.Image = this.Image;
+        clone.BaseImage = this.BaseImage;
+        clone.SybolImage = this.SybolImage;
         clone.Color = this.Color;
 
         clone.AttackDamage = this.AttackDamage;

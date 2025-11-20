@@ -62,6 +62,7 @@ public class Tower : Entity
             if (!isMax)
             {
                 symbol.localScale = Vector3.one * .5f;
+                symbolSR.sprite = data.SybolImage;
                 isMax = true;
             }
             return;
@@ -182,7 +183,7 @@ public class Tower : Entity
         data = _data;
 
         gameObject.name = data.Name;
-        if (data.Image != null) sr.sprite = data.Image;
+        if (data.BaseImage != null) sr.sprite = data.BaseImage;
 
         outLineSR.color = data.Color;
         symbolSR.color = data.Color;
