@@ -151,9 +151,21 @@ public class Tower : Entity
     #region SET
     public void IsDragging(bool _on)
     {
-        sr.sortingOrder = !_on ? 0 : 1000;
-        outLineSR.sortingOrder = !_on ? 1 : 1001;
-        symbolSR.sortingOrder = !_on ? 2 : 1002;
+        int baseOrder = _on ? 1000 : 0;
+
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            SpriteRenderer r = renderers[i];
+
+            if (r == sr)
+                r.sortingOrder = baseOrder;
+            else if (r == outLineSR)
+                r.sortingOrder = baseOrder + 1;
+            else
+                r.sortingOrder = baseOrder + 2;
+        }
     }
 
     public void SetRank(int _rank)

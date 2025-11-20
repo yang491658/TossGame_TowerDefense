@@ -17,6 +17,7 @@ public class TestManager : MonoBehaviour
 
     [Header("Entity Test")]
     [SerializeField] private bool spawn = true;
+    [SerializeField][Min(1)] private int rank = 3;
 
     private void Awake()
     {
@@ -58,6 +59,8 @@ public class TestManager : MonoBehaviour
         }
         if (isAuto && !GameManager.Instance.IsPaused)
         {
+            AutoMergeTower();
+
             if (GameManager.Instance?.GetGold() >= EntityManager.Instance?.GetNeedGold())
                 if (EntityManager.Instance?.SpawnTower() == null) MergeTower();
             if (GameManager.Instance.IsGameOver && autoRoutine == null)
@@ -126,23 +129,79 @@ public class TestManager : MonoBehaviour
         autoRoutine = null;
     }
 
+    private void AutoMergeTower()
+    {
+        List<Tower> towers = EntityManager.Instance?.GetTowers();
+        int len = towers.Count;
+        if (len < 2) return;
+
+        int maxRank = rank;
+        if (maxRank < 1) maxRank = 1;
+
+        for (int rank = 1; rank < maxRank; rank++)
+        {
+            for (int i = 0; i < len; i++)
+            {
+                Tower a = towers[i];
+                if (a.GetRank() != rank) continue;
+
+                for (int j = 0; j < len; j++)
+                {
+                    if (i == j) continue;
+
+                    Tower b = towers[j];
+                    if (b.GetRank() != rank) continue;
+
+                    if (EntityManager.Instance?.MergeTower(a, b) != null)
+                        return;
+                }
+            }
+        }
+    }
+
     private void MergeTower()
     {
         List<Tower> towers = EntityManager.Instance?.GetTowers();
         int len = towers.Count;
         if (len < 2) return;
 
-        int start = Random.Range(0, len);
+        HashSet<int> rankSet = new HashSet<int>();
+        for (int i = 0; i < len; i++)
+            rankSet.Add(towers[i].GetRank());
 
-        for (int n = 0; n < len; n++)
+        List<int> ranks = new List<int>(rankSet);
+        ranks.Sort();
+
+        for (int r = 0; r < ranks.Count; r++)
         {
-            int i = (start + n) % len;
+            int rank = ranks[r];
 
-            for (int j = 0; j < len; j++)
+            List<int> indices = new List<int>();
+            for (int i = 0; i < len; i++)
             {
-                if (i == j) continue;
+                if (towers[i].GetRank() == rank)
+                    indices.Add(i);
+            }
 
-                if (EntityManager.Instance?.MergeTower(towers[i], towers[j]) != null) return;
+            int count = indices.Count;
+            if (count < 2) continue;
+
+            int start = Random.Range(0, count);
+
+            for (int n = 0; n < count; n++)
+            {
+                int iLocal = indices[(start + n) % count];
+                Tower a = towers[iLocal];
+
+                for (int m = 0; m < count; m++)
+                {
+                    if (n == m) continue;
+
+                    int jLocal = indices[m];
+                    Tower b = towers[jLocal];
+
+                    if (EntityManager.Instance?.MergeTower(a, b) != null) return;
+                }
             }
         }
     }

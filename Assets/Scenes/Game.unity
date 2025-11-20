@@ -6523,6 +6523,7 @@ MonoBehaviour:
   autoDelay: 1
   bgmPause: 0
   spawn: 1
+  rank: 3
 --- !u!4 &1407473050
 Transform:
   m_ObjectHideFlags: 0
