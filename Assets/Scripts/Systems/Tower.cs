@@ -17,6 +17,7 @@ public class Tower : Entity
 
     [Header("Battle")]
     [SerializeField] private Monster target;
+    [SerializeField] private int attackDistance;
     [SerializeField] private int attackDamage;
     [SerializeField] private float attackSpeed;
     private float attackTimer;
@@ -113,13 +114,14 @@ public class Tower : Entity
         attackTimer -= Time.deltaTime;
         if (attackTimer > 0f) return;
 
-        if (target == null)
+        Monster nearest = EntityManager.Instance?.GetMonster(transform.position, attackDistance);
+        if (nearest == null)
         {
-            Monster nearest = EntityManager.Instance?.GetMonster(transform.position);
-            if (nearest == null) return;
-
-            target = nearest;
+            target = null;
+            return;
         }
+
+        target = nearest;
         Shoot();
 
         attackTimer = attackSpeed;
@@ -154,6 +156,7 @@ public class Tower : Entity
         rank = Mathf.Clamp(_rank, 1, maxRank);
         UpdateRank();
 
+        attackDistance = data.AttackDistance * rank;
         attackDamage = data.AttackDamage * rank;
         attackSpeed = data.AttackSpeed / rank;
     }

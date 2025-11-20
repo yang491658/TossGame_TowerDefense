@@ -16,6 +16,7 @@ public class TowerData : ScriptableObject
     public Color Color = Color.black;
 
     [Header("Battle")]
+    public int AttackDistance = 1;
     public int AttackDamage = 1;
     public float AttackSpeed = 3;
 
@@ -76,6 +77,7 @@ public class TowerData : ScriptableObject
         clone.Image = this.Image;
         clone.Color = this.Color;
 
+        clone.AttackDistance = this.AttackDistance;
         clone.AttackDamage = this.AttackDamage;
         clone.AttackSpeed = this.AttackSpeed;
 

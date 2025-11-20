@@ -376,7 +376,7 @@ public class EntityManager : MonoBehaviour
     }
     #endregion
 
-    #region GET
+    #region GET_기타
     public bool IsSell(Vector3 _pos)
     {
         Tilemap tilemap = mapSellTilemap;
@@ -393,74 +393,138 @@ public class EntityManager : MonoBehaviour
         return isSell;
     }
 
-    public Monster GetMonster()
-    {
-        if (monsters.Count == 0) return null;
-        return monsters[Random.Range(0, monsters.Count)];
-    }
-    public Monster GetMonster(int _index)
-    {
-        if (monsters.Count == 0) return null;
-        return monsters[_index];
-    }
-    public Monster GetMonster(Vector3 _pos)
-    {
-        if (monsters.Count == 0) return null;
-
-        Monster nearest = monsters[0];
-        float minSqr = (nearest.transform.position - _pos).sqrMagnitude;
-
-        for (int i = 1; i < monsters.Count; i++)
-        {
-            Monster monster = monsters[i];
-            Vector3 delta = monster.transform.position - _pos;
-            float sqr = delta.sqrMagnitude;
-            if (sqr < minSqr)
-            {
-                minSqr = sqr;
-                nearest = monster;
-            }
-        }
-
-        return nearest;
-    }
-
-    public Tower GetTower()
-    {
-        if (towers.Count == 0) return null;
-
-        return towers[Random.Range(0, towers.Count)];
-    }
-    public Tower GetTower(int _index)
-    {
-        if (towers.Count == 0) return null;
-
-        return towers[_index];
-    }
-    public Tower GetTower(Vector3 _pos)
-    {
-        if (towers.Count == 0) return null;
-
-        Tower nearest = towers[0];
-        float minSqr = (nearest.transform.position - _pos).sqrMagnitude;
-
-        for (int i = 1; i < towers.Count; i++)
-        {
-            Tower tower = towers[i];
-            Vector3 delta = tower.transform.position - _pos;
-            float sqr = delta.sqrMagnitude;
-            if (sqr < minSqr)
-            {
-                minSqr = sqr;
-                nearest = tower;
-            }
-        }
-
-        return nearest;
-    }
+    public GameObject GetBulletBase() => bulletBase;
     public List<Tower> GetTowers() => towers;
     public int GetNeedGold() => needGold;
+    #endregion
 
-    public GameObject GetBulletBase() => bulletBase;
+    #region GET_공통
+    private T GetRandom<T>(List<T> _list) where T : class
+    {
+        if (_list.Count == 0) return null;
+        return _list[Random.Range(0, _list.Count)];
+    }
+
+    private T GetByIndex<T>(List<T> _list, int _index) where T : class
+    {
+        if (_list.Count == 0) return null;
+        return _list[_index];
+    }
+
+    private T GetByDistance<T>(List<T> _list, Vector3 _pos, int _distance, Tilemap _tilemap) where T : Component
+    {
+        if (_list.Count == 0) return null;
+
+        Vector3Int centerCell = _tilemap.WorldToCell(_pos);
+        int maxDist = _distance > 0 ? _distance : int.MaxValue;
+
+        T nearest = null;
+        bool found = false;
+        int bestDist = 0;
+
+        for (int i = 0; i < _list.Count; i++)
+        {
+            T entity = _list[i];
+            Vector3Int cell = _tilemap.WorldToCell(entity.transform.position);
+            Vector3Int delta = cell - centerCell;
+            int dist = Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y));
+
+            if (dist > maxDist) continue;
+
+            if (!found || dist < bestDist)
+            {
+                found = true;
+                bestDist = dist;
+                nearest = entity;
+            }
+        }
+
+        if (!found) return null;
+        return nearest;
+    }
+
+    private T GetByStat<T>(List<T> _list, System.Func<T, int> _selector, bool _low, int _min = 0, bool _useMin = false) where T : class
+    {
+        if (_list.Count == 0) return null;
+
+        List<T> candidates = new List<T>();
+        bool hasFirst = false;
+        int best = 0;
+
+        for (int i = 0; i < _list.Count; i++)
+        {
+            T entity = _list[i];
+            int value = _selector(entity);
+            if (_useMin && value < _min) continue;
+
+            if (!hasFirst)
+            {
+                hasFirst = true;
+                best = value;
+                candidates.Clear();
+                candidates.Add(entity);
+                continue;
+            }
+
+            if (_low)
+            {
+                if (value < best)
+                {
+                    best = value;
+                    candidates.Clear();
+                    candidates.Add(entity);
+                }
+                else if (value == best)
+                {
+                    candidates.Add(entity);
+                }
+            }
+            else
+            {
+                if (value > best)
+                {
+                    best = value;
+                    candidates.Clear();
+                    candidates.Add(entity);
+                }
+                else if (value == best)
+                {
+                    candidates.Add(entity);
+                }
+            }
+        }
+
+        if (!hasFirst) return null;
+
+        return candidates[Random.Range(0, candidates.Count)];
+    }
+    #endregion
+
+    #region GET_몬스터
+    public Monster GetMonster()
+        => GetRandom(monsters);
+
+    public Monster GetMonster(int _index)
+        => GetByIndex(monsters, _index);
+
+    public Monster GetMonster(Vector3 _pos, int _distance = 0)
+        => GetByDistance(monsters, _pos, _distance, mapRoadTilemap);
+
+    public Monster GetMonster(bool _lowHealth)
+        => GetByStat(monsters, _monster => _monster.GetHealth(), _lowHealth);
+    #endregion
+
+    #region GET_타워
+    public Tower GetTower()
+        => GetRandom(towers);
+
+    public Tower GetTower(int _index)
+        => GetByIndex(towers, _index);
+
+    public Tower GetTower(Vector3 _pos, int _distance = 0)
+        => GetByDistance(towers, _pos, _distance, mapSlotTilemap);
+
+    public Tower GetTower(bool _lowRank, int _minRank = 0)
+        => GetByStat(towers, _tower => _tower.GetRank(), _lowRank, _minRank, true);
     #endregion
 }
