@@ -44,7 +44,7 @@ public class Tower : Entity
     {
         base.Update();
 
-        if (!isDragging) Attack();
+        Attack();
     }
 
     #region 랭크
