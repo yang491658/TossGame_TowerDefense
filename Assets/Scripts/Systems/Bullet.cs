@@ -6,7 +6,7 @@ public class Bullet : Entity
     [SerializeField] private Monster target;
     private Vector3 targetPos;
     [Space]
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed = 10f;
 
     [Header("Battle")]
     private Tower tower;
