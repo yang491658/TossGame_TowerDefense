@@ -16,8 +16,7 @@ public class Monster : Entity
     private Canvas canvas;
     private TextMeshProUGUI healthText;
     [Space]
-    [SerializeField] private Color damageColor = Color.red;
-    [SerializeField] private float damageDuration = 1f;
+    [SerializeField] private float damageDuration = 0.5f;
     [SerializeField] private float damageSpeed = 3f;
     [Space]
     [SerializeField] private int dropGold = 1;
@@ -106,7 +105,7 @@ public class Monster : Entity
 
             _text.transform.localPosition = start + Vector3.up * damageSpeed * time;
 
-            Color c = damageColor;
+            Color c = Color.Lerp(Color.white, Color.black, t);
             c.a = Mathf.Lerp(1f, 0f, t);
             _text.color = c;
 

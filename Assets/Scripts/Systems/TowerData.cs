@@ -19,7 +19,7 @@ public class TowerData : ScriptableObject
 
     [Header("Battle")]
     public int AttackDamage = 1;
-    public float AttackSpeed = 3;
+    public float AttackSpeed = 1;
 
 #if UNITY_EDITOR
     private void OnValidate()

@@ -127,7 +127,7 @@ public class Tower : Entity
         }
 
         Shoot();
-        attackTimer = attackSpeed;
+        attackTimer = 1f / attackSpeed;
     }
 
     public virtual void Shoot()
@@ -176,7 +176,7 @@ public class Tower : Entity
         UpdateRank();
 
         attackDamage = data.AttackDamage * rank;
-        attackSpeed = data.AttackSpeed / rank;
+        attackSpeed = data.AttackSpeed * rank;
     }
 
     public virtual void SetData(TowerData _data)

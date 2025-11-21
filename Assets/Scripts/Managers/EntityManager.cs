@@ -38,7 +38,7 @@ public class EntityManager : MonoBehaviour
 
     [Header("Monster")]
     [SerializeField][Min(0.1f)] private float delay = 5f;
-    [SerializeField][Min(0.1f)] private float minDelay = 0.5f;
+    [SerializeField][Min(0.1f)] private float minDelay = 0.3f;
     private float delayBase;
     private Coroutine spawnRoutine;
 
@@ -385,9 +385,9 @@ public class EntityManager : MonoBehaviour
         Vector3Int cell = tilemap.WorldToCell(_pos);
         bool isSell = tilemap.HasTile(cell);
 
-        Color color = Color.yellow;
+        Color color = tilemap.color;
         color.a = 50f / 255f;
-        if (isSell) color = Color.red;
+        if (isSell) color.a = 1f;
 
         tilemap.color = color;
         return isSell;
