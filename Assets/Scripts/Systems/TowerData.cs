@@ -14,7 +14,7 @@ public class TowerData : ScriptableObject
     public int ID;
     public string Name;
     public Sprite BaseImage;
-    public Sprite SybolImage;
+    public Sprite SymbolImage;
     public Color Color = Color.black;
 
     [Header("Battle")]
@@ -95,7 +95,7 @@ public class TowerData : ScriptableObject
                 Sprite s = symbolSprites[i];
                 if (s.name.StartsWith(prefix))
                 {
-                    SybolImage = s;
+                    SymbolImage = s;
                     break;
                 }
             }
@@ -114,7 +114,7 @@ public class TowerData : ScriptableObject
         clone.ID = this.ID;
         clone.Name = this.Name;
         clone.BaseImage = this.BaseImage;
-        clone.SybolImage = this.SybolImage;
+        clone.SymbolImage = this.SymbolImage;
         clone.Color = this.Color;
 
         clone.AttackDamage = this.AttackDamage;

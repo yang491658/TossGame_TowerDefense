@@ -63,7 +63,7 @@ public class Tower : Entity
             if (!isMax)
             {
                 symbol.localScale = Vector3.one * .5f;
-                symbolSR.sprite = data.SybolImage;
+                symbolSR.sprite = data.SymbolImage;
                 isMax = true;
             }
             return;
