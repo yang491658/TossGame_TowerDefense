@@ -243,6 +243,7 @@ public class UIManager : MonoBehaviour
     public void ResetUI()
     {
         playTime = 0;
+        UpdatePlayTime();
         UpdateGold(GameManager.Instance.GetGold());
     }
 

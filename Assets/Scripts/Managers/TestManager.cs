@@ -8,8 +8,8 @@ public class TestManager : MonoBehaviour
 
     [Header("Game Test")]
     [SerializeField] private int testCount = 1;
-    [SerializeField][Min(1f)] private float autoDelay = 1f;
-    private bool isAuto = false;
+    [SerializeField] private bool isAuto = false;
+    [SerializeField][Min(1f)] private float autoReplay = 1f;
     private Coroutine autoRoutine;
 
     [Header("Sound Test")]
@@ -51,7 +51,7 @@ public class TestManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O))
             AutoPlay();
-        if (isAuto && !GameManager.Instance.IsPaused)
+        if (isAuto)
         {
             AutoMergeTower();
 
@@ -121,7 +121,7 @@ public class TestManager : MonoBehaviour
 
     private IEnumerator AutoReplay()
     {
-        yield return new WaitForSecondsRealtime(autoDelay);
+        yield return new WaitForSecondsRealtime(autoReplay);
         if (GameManager.Instance.IsGameOver)
         {
             testCount++;
