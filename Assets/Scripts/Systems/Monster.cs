@@ -77,23 +77,27 @@ public class Monster : Entity
     }
 
     #region 전투
-    public void TakeDamage(int _damage)
+    public void TakeDamage(int _damage) => TakeDamage(_damage, healthText.color);
+    public void TakeDamage(int _damage, Color _color)
     {
         SetHealth(health - _damage);
-        CreateDamage(_damage);
+        CreateDamage(_damage, _color);
         if (health <= 0) Die();
     }
 
-    private void CreateDamage(int _damage)
+    private void CreateDamage(int _damage, Color _color)
     {
         TextMeshProUGUI t = Instantiate(healthText, canvas.transform);
+        
         t.gameObject.name = "Damage";
-        t.text = _damage.ToString();
         t.transform.localPosition = healthText.transform.localPosition;
-        StartCoroutine(DamageCoroutine(t));
+        t.text = _damage.ToString();
+        t.color = _color;
+
+        StartCoroutine(DamageCoroutine(t, _color));
     }
 
-    private IEnumerator DamageCoroutine(TextMeshProUGUI _text)
+    private IEnumerator DamageCoroutine(TextMeshProUGUI _text, Color _color)
     {
         float time = 0f;
         Vector3 start = _text.transform.localPosition;
@@ -105,7 +109,7 @@ public class Monster : Entity
 
             _text.transform.localPosition = start + Vector3.up * damageSpeed * time;
 
-            Color c = Color.Lerp(Color.white, Color.black, t);
+            Color c = _color;
             c.a = Mathf.Lerp(1f, 0f, t);
             _text.color = c;
 

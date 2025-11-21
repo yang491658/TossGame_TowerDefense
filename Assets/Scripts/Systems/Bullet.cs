@@ -22,7 +22,7 @@ public class Bullet : Entity
     {
         if (target != null && target.gameObject == _collision.gameObject)
         {
-            target.TakeDamage(attackDamage);
+            target.TakeDamage(attackDamage, sr.color);
 
             Destroy(gameObject);
             return;

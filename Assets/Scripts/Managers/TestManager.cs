@@ -212,5 +212,5 @@ public class TestManager : MonoBehaviour
         }
     }
 
-    public void GiveGold() => GameManager.Instance?.GoldUp(100_0000);
+    public void GiveGold() => GameManager.Instance?.GoldUp(1000);
 }
