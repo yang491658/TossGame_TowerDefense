@@ -71,6 +71,8 @@ public class Tower : Entity
             return;
         }
 
+        isMax = false;
+
         Vector2[] positions = GetArray(rank);
 
         for (int i = 0; i < positions.Length; i++)
